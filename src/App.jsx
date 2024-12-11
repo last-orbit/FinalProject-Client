@@ -1,17 +1,26 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import { Route, Routes } from 'react-router-dom';
+import './App.css';
+import LoginPage from './pages/LoginPage/LoginPage';
+import HomePage from './pages/HomePage/HomePage';
+import AboutUs from './pages/AboutUs/AboutUs';
 
-import { Button } from "@/components/ui/button";
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <Button>Button</Button>
-    </>
+    <main>
+      <Routes>
+        {/* <Route path='/' element={<SignupPage />} /> */}
+        <Route path='/login' element={<LoginPage />} />
+        <Route path='/' element={<ProtectedRoute>
+          <HomePage />
+
+        </ProtectedRoute>
+        }/>
+        <Route path='/about-us' element={<AboutUs />} />
+
+      </Routes>
+    </main>
   );
 }
 
