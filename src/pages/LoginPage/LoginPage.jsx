@@ -40,13 +40,27 @@ const LoginPage = () => {
 
   return (
     <>
-      <h1>Login Page </h1>
+      <h1 class="mb-10 text-2xl mt-20">Login Page </h1>
 
-      <form onSubmit={handleSubmit}>
-        <Input type='email' placeholder='Email' onChange={(e) => setEmail(e.target.value)} />
-        <Input type='password' placeholder='Password' onChange={(e) => setPassword(e.target.value)}/>
+      <form
+        className='flex flex-col gap-5 items-center'
+        onSubmit={handleSubmit}
+      >
+        <div className='grid w-full max-w-sm items-center gap-1.5'>
+          <Input
+            type='email'
+            placeholder='Email'
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div className='grid w-full max-w-sm items-center gap-1.5'>
+          <Input
+            type='password'
+            placeholder='Password'
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
         <Button>Login</Button>
-
       </form>
     </>
   );
