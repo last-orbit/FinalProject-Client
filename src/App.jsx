@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound/NotFound";
 import SignupPage from "./pages/SignUpPage/SignUp";
 import Navbar from "./components/Navbar";
 import ShufflePage from "./pages/ShuffePage/ShufflePage";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 
 function App() {
   return (
@@ -29,6 +30,14 @@ function App() {
         />
 
         <Route path="/fellowship" element={<AboutUs />} />
+        <Route
+          path="/the-shire"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/my-precious"
           element={
