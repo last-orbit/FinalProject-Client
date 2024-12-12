@@ -16,7 +16,7 @@ function App() {
     <main>
       <Navbar />
       <Routes>
-        <Route path="/i-wanna-be-part-of-this" element={<SignupPage />} />
+        <Route path="/i'm-going-on-an-adventure" element={<SignupPage />} />
         <Route path="/you-shall-not-pass" element={<LoginPage />} />
         <Route path="/" element={<HomePage />} />
         <Route

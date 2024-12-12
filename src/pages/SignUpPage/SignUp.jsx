@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const SignUp = () => {
+  const [image, setImage] = React.useState('');
   const [username, setUsername] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -13,6 +14,7 @@ const SignUp = () => {
   function handleSignup(e) {
     e.preventDefault();
     const UserSignup = {
+      image,
       username,
       email,
       password,
@@ -26,18 +28,18 @@ axios
   } //Finish the axios request to the server and finish the on submit form
   return (
     <div>
-      <form className='flex flex-col gap-5 items-center'>
+      <form className='flex flex-col gap-5 items-center' onSubmit={handleSignup}>
         <div className='grid w-full max-w-sm items-center gap-1.5'>
           <Label>Image</Label>
-          <Input type='text' id='image' placeholder='Image' />
+          <Input type='text' id='image' placeholder='Image' value={image} onChange={(e) => setImage(e.target.value)}/>
         </div>
         <div className='grid w-full max-w-sm items-center gap-1.5'>
           <Label>Username</Label>
-          <Input type='text' id='username' placeholder='Username' />
+          <Input type='text' id='username' placeholder='Username' value={username} onChange={(e) => setUsername(e.target.value)}/>
         </div>
         <div className='grid w-full max-w-sm items-center gap-1.5'>
           <Label>Email</Label>
-          <Input type='email' id='email' placeholder='Email' />
+          <Input type='email' id='email' placeholder='Email'  value={email} onChange={(e) => setEmail(e.target.value)}/>
         </div>
         <div className='grid w-full max-w-sm items-center gap-1.5'>
           <Label>Password</Label>
@@ -46,6 +48,8 @@ axios
             id='password'
             placeholder='Password'
             minlength='4'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <div>
