@@ -40,7 +40,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <h1 class="mb-10 text-2xl mt-20">Login Page </h1>
+      <h1 className='mb-10 text-2xl mt-20'>Login Page </h1>
 
       <form
         className='flex flex-col gap-5 items-center'
@@ -62,6 +62,10 @@ const LoginPage = () => {
         </div>
         <Button>Login</Button>
       </form>
+      <p className='mt-4'>
+        Don&#39;t have an account?{' '}
+        <a href="/i'm-going-on-an-adventure">Sign Up</a>
+      </p>
     </>
   );
 };

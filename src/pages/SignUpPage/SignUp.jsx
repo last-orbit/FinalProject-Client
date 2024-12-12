@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../../../config';
 
 
     const SignUp = () => {
@@ -21,7 +22,7 @@ import axios from 'axios';
           password,
         };
         axios
-          .post('http://localhost:5005/auth/signup', UserSignup)
+          .post(`${API_URL}/signup`, UserSignup)
           .then((res) => {
             console.log(res.data);
             nav('/you-shall-not-pass');
@@ -31,7 +32,7 @@ import axios from 'axios';
       return (
         <div>
           <form
-            className='flex flex-col gap-5 items-center'
+            className='flex flex-col gap-5 items-center mt-10'
             onSubmit={handleSignup}
           >
             <div className='grid w-full max-w-sm items-center gap-1.5'>
@@ -81,7 +82,7 @@ import axios from 'axios';
               </Button>
             </div>
           </form>
-          <p>
+          <p className='mt-4'>
             Already have an account? <a href='/you-shall-not-pass'>Login</a>
           </p>
         </div>
