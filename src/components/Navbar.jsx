@@ -3,10 +3,12 @@ import { AuthContext } from "../contexts/AuthContext";
 import { API_URL } from "../../config";
 import axios from "axios";
 import { Link, NavLink } from "react-router-dom";
+import { useTheme } from "@/components/ThemeProvider";
 
 //Medias
 import LogoLight from "../assets/LogoLight.png";
 import LogoDark from "../assets/LogoDark.png";
+import { Moon, Sun, Menu } from "lucide-react";
 
 //Components
 import {
@@ -21,20 +23,45 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const { user, isLoggedIn, handleLogout } = useContext(AuthContext);
   const [userImage, setUserImage] = useState(null);
+  const { theme, setTheme } = useTheme();
 
+  //Functions
+
+  //this variable is true if the dark mode is activated
+  const isDarkMode = theme === "dark";
+
+  //Thess function toggle the mode depending on the current mode
+  const handleLight = () => {
+    if (isDarkMode) {
+      setTheme("light");
+    }
+  };
+  const handleDark = () => {
+    if (!isDarkMode) {
+      setTheme("dark");
+    }
+  };
+
+  //Hooks
   useEffect(() => {
     if (isLoggedIn && user) {
+      //to get the user image for the avatar
       const getUserImage = async () => {
         try {
           const response = await axios.get(`${API_URL}/user/${user._id}`);
@@ -50,15 +77,16 @@ const Navbar = () => {
   }, [isLoggedIn, userImage]);
 
   return (
-    <div className="flex justify-center md:justify-between items-center shadow-md w-full p-2 ">
+    <div className="flex justify-between items-center shadow-md w-full p-2 ">
       <Link to="/">
         <img
           className=" w-10 h-10 md:w-16 md:h-16"
-          src={LogoLight}
+          src={isDarkMode ? LogoDark : LogoLight}
           alt="Logo"
         />
       </Link>
       <div className="flex justify-center items-start ">
+        {/* desktop top menu */}
         <div className="hidden md:flex">
           <Menubar>
             <Link to="/the-eagles-are-coming">
@@ -93,16 +121,81 @@ const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <Link to="/the-shire">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuItem>My Account</DropdownMenuItem>
                 </Link>
+
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuItem
+                        onClick={handleLight}
+                        className={
+                          isDarkMode ? "text-gray-600" : "text-gray-400"
+                        }
+                      >
+                        <Sun /> Light
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={handleDark}
+                        className={
+                          isDarkMode ? "text-gray-400" : "text-gray-300"
+                        }
+                      >
+                        <Moon /> Dark
+                      </DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem onClick={handleLogout}>
+                <DropdownMenuLabel onClick={handleLogout}>
                   Logout
-                </DropdownMenuItem>
+                </DropdownMenuLabel>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+        </div>
+        {/* mobile top menu */}
+
+        <div className="ml-2 flex md:hidden">
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Menu />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <Link to="/the-shire">
+                <DropdownMenuItem>My Account</DropdownMenuItem>
+              </Link>
+
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent>
+                    <DropdownMenuItem
+                      onClick={handleLight}
+                      className={isDarkMode ? "text-gray-600" : "text-gray-400"}
+                    >
+                      <Sun /> Light
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={handleDark}
+                      className={isDarkMode ? "text-gray-400" : "text-gray-300"}
+                    >
+                      <Moon /> Dark
+                    </DropdownMenuItem>
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuLabel onClick={handleLogout}>
+                Logout
+              </DropdownMenuLabel>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>
