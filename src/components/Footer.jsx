@@ -30,8 +30,10 @@ const Footer = () => {
   const isMyFeedPage = location.pathname.startsWith("/whats-up");
   const isShufflePage = location.pathname.startsWith("/the-eagles-are-coming");
 
+  //Hooks
   useEffect(() => {
     if (isLoggedIn && user) {
+      //to get the user image for the avatar
       const getUserImage = async () => {
         try {
           const response = await axios.get(`${API_URL}/user/${user._id}`);
@@ -48,7 +50,7 @@ const Footer = () => {
 
   return (
     <div>
-      <div className="w-full h-12 absolute bottom-0 flex justify-around items-center shadow-top md:hidden">
+      <div className="w-full fixed h-12 bottom-0 flex justify-around items-center shadow-top md:hidden">
         <Button
           variant={isShufflePage ? "default" : "outline"}
           size="icon"
@@ -87,7 +89,7 @@ const Footer = () => {
           </Avatar>
         </Link>
       </div>
-      <div className="hidden md:w-full md:h-12 md:absolute md:bottom-0 md:flex md:justify-around md:items-center shadow-top ">
+      <div className="hidden md:w-full md:h-12 md:fixed md:bottom-0 md:flex md:justify-around md:items-center shadow-top ">
         Follow this project on github !
       </div>
     </div>

@@ -13,59 +13,69 @@ import ShufflePage from "./pages/ShuffePage/ShufflePage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import Footer from "./components/Footer";
 import MyFeedPage from "./pages/MyFeed/MyFeedPage";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 function App() {
   return (
     <main>
-      <Navbar />
-      <Routes>
-        <Route path="/i'm-going-on-an-adventure" element={<SignupPage />} />
-        <Route path="/you-shall-not-pass" element={<LoginPage />} />
-        <Route path="/" element={<HomePage />} />
-        <Route
-          path="/for-frodo"
-          element={
-            <ProtectedRoute>
-              <ImagePage />
-            </ProtectedRoute>
-          }
-        />
+      <ThemeProvider>
+        <Navbar />
+        <Routes>
+          <Route path="/i'm-going-on-an-adventure" element={<SignupPage />} />
+          <Route path="/you-shall-not-pass" element={<LoginPage />} />
+          <Route path="/" element={<HomePage />} />
 
-        <Route path="/fellowship" element={<AboutUs />} />
-        <Route
-          path="/the-shire"
-          element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/my-precious"
-          element={
-            <ProtectedRoute>
-              <MyCollection />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/the-eagles-are-coming"
-          element={
-            <ProtectedRoute>
-              <ShufflePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/whats-up"
-          element={
-            <ProtectedRoute>
-              <MyFeedPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+          {/* Use the imageId */}
+          <Route
+            path="/for-frodo/:imageId"
+            element={
+              <ProtectedRoute>
+                <ImagePage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/fellowship" element={<AboutUs />} />
+
+          {/* Use the token to access to the user ID */}
+          <Route
+            path="/the-shire"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          {/* Use the token to access to the user ID */}
+          <Route
+            path="/my-precious"
+            element={
+              <ProtectedRoute>
+                <MyCollection />
+              </ProtectedRoute>
+            }
+          />
+          {/* Use the token to access to the user ID */}
+          <Route
+            path="/the-eagles-are-coming"
+            element={
+              <ProtectedRoute>
+                <ShufflePage />
+              </ProtectedRoute>
+            }
+          />
+          {/* Use the token to access to the user ID */}
+          <Route
+            path="/whats-up"
+            element={
+              <ProtectedRoute>
+                <MyFeedPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </ThemeProvider>
       <Footer />
     </main>
   );
