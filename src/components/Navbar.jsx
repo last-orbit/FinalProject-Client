@@ -37,16 +37,16 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Navbar = () => {
+  //Setters
   const { user, isLoggedIn, handleLogout } = useContext(AuthContext);
   const [userImage, setUserImage] = useState(null);
   const { theme, setTheme } = useTheme();
 
-  //Functions
-
   //this variable is true if the dark mode is activated
   const isDarkMode = theme === "dark";
 
-  //Thess function toggle the mode depending on the current mode
+  //Functions
+  //These functions toggle the mode depending on the current mode
   const handleLight = () => {
     if (isDarkMode) {
       setTheme("light");

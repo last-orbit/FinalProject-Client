@@ -24,8 +24,10 @@ function App() {
           <Route path="/i'm-going-on-an-adventure" element={<SignupPage />} />
           <Route path="/you-shall-not-pass" element={<LoginPage />} />
           <Route path="/" element={<HomePage />} />
+
+          {/* Use the imageId */}
           <Route
-            path="/for-frodo"
+            path="/for-frodo/:imageId"
             element={
               <ProtectedRoute>
                 <ImagePage />
@@ -34,6 +36,8 @@ function App() {
           />
 
           <Route path="/fellowship" element={<AboutUs />} />
+
+          {/* Use the token to access to the user ID */}
           <Route
             path="/the-shire"
             element={
@@ -42,6 +46,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          {/* Use the token to access to the user ID */}
           <Route
             path="/my-precious"
             element={
@@ -50,6 +55,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          {/* Use the token to access to the user ID */}
           <Route
             path="/the-eagles-are-coming"
             element={
@@ -58,6 +64,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          {/* Use the token to access to the user ID */}
           <Route
             path="/whats-up"
             element={
