@@ -11,6 +11,8 @@ import SignupPage from "./pages/SignUpPage/SignUp";
 import Navbar from "./components/Navbar";
 import ShufflePage from "./pages/ShuffePage/ShufflePage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import Footer from "./components/Footer";
+import MyFeedPage from "./pages/MyFeed/MyFeedPage";
 
 function App() {
   return (
@@ -54,8 +56,17 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/whats-up"
+          element={
+            <ProtectedRoute>
+              <MyFeedPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <Footer />
     </main>
   );
 }
