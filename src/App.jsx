@@ -58,24 +58,27 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/i'm-going-on-an-adventure" element={<SignupPage />} />
-          <Route path="/you-shall-not-pass" element={<LoginPage />} />
-          <Route path="/" element={<HomePage />} />
+          <Route path='/you-shall-not-pass' element={<LoginPage />} />
+          <Route path='/' element={<HomePage />} />
 
           {/* Use the imageId */}
           <Route
-            path="/for-frodo/:imageId"
+            path='/for-frodo/:imageId'
             element={
               // <ProtectedRoute>
-              <ImagePage />
+              <ImagePage
+                deleteImageToCollection={deleteImageToCollection}
+                addImageToCollection={addImageToCollection}
+              />
               // </ProtectedRoute>
             }
           />
 
-          <Route path="/fellowship" element={<AboutUs />} />
+          <Route path='/fellowship' element={<AboutUs />} />
 
           {/* Use the token to access to the user ID */}
           <Route
-            path="/the-shire"
+            path='/the-shire'
             element={
               <ProtectedRoute>
                 <ProfilePage />
@@ -84,7 +87,7 @@ function App() {
           />
           {/* Use the token to access to the user ID */}
           <Route
-            path="/my-precious"
+            path='/my-precious'
             element={
               <ProtectedRoute>
                 <MyCollection />
@@ -93,7 +96,7 @@ function App() {
           />
           {/* Use the token to access to the user ID */}
           <Route
-            path="/the-eagles-are-coming"
+            path='/the-eagles-are-coming'
             element={
               <ProtectedRoute>
                 <ShufflePage
@@ -105,14 +108,14 @@ function App() {
           />
           {/* Use the token to access to the user ID */}
           <Route
-            path="/whats-up"
+            path='/whats-up'
             element={
               <ProtectedRoute>
                 <MyFeedPage />
               </ProtectedRoute>
             }
           />
-          <Route path="*" element={<NotFound />} />
+          <Route path='*' element={<NotFound />} />
         </Routes>
       </ThemeProvider>
       <Footer />

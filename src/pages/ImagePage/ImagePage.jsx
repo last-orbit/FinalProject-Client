@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useContext } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import axios from 'axios';
@@ -34,7 +36,9 @@ import {
   SendHorizontal,
 } from 'lucide-react';
 
-const ImagePage = () => {
+const ImagePage = ({ deleteImageToCollection,
+  addImageToCollection }) => {
+  const {user} = useContext(AuthContext);
   const { imageId } = useParams();
   /******************* States **************/
   // grabs the image
@@ -60,15 +64,35 @@ const ImagePage = () => {
     }
   };
 
-  const getComments = async () => {
+  // const getComments = async () => {
+  //   try {
+  //     // const reponse = await axios.get(`${API_URL}/comment/${imageId}`);
+  //     const foundComments = data;
+  //     setComments(foundComments);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+  // Checks if Image is in Collection
+  const checkInCollection = async () => {
     try {
-      const reponse = await axios.get(`${API_URL}/comment/${imageId}`);
-      const foundComments = reponse.data;
-      setComments(foundComments);
+      const { data } = await axios.get(`${API_URL}/collection/${user._id}`);
+      const userCollection = data.collection || [];
+      console.log(userCollection);
+      const imageExists = userCollection.some((image) => image.id === imageId);
+      setIsInCollection(imageExists);
+      console.log(userCollection[0]._id)
     } catch (error) {
       console.log(error);
     }
   }
+  if (imageId) {
+    checkInCollection();
+  }
+
+
+
 
   const handleNewComment = async () => {
     try {
@@ -79,6 +103,8 @@ const ImagePage = () => {
       console.log(error);
     }
   }
+
+
 
   /******************* Use Effect for getting the Images **************/
   // useEffect(() => {
@@ -101,8 +127,8 @@ const ImagePage = () => {
 
   useEffect(() => {
     getImage();
-    getComments();
-  })
+    // getComments();
+  }, [imageId]);
   /******************* If there are no images, show a loading screen **************/
   if (!currentImage) {
     return (
@@ -116,6 +142,12 @@ const ImagePage = () => {
       </div>
     );
   }
+
+  // if (!isInCollection) {
+  //   return (
+
+  //   );
+  // }
   return (
     <>
       {/* Image */}
@@ -148,7 +180,15 @@ const ImagePage = () => {
           </div>
           {/* Bottom Section */}
           <div className='flex gap-2 justify-self-end h-48 '>
-            <Button className='w-fit my-5 '>
+            <Button
+              className='w-fit my-5 '
+              variant={isInCollection ? 'secondary' : ''}
+              onclick={() =>
+                isInCollection
+                  ? deleteImageToCollection(imageId)
+                  : addImageToCollection(imageId)
+              }
+            >
               {' '}
               {isInCollection ? <CircleMinus /> : <CirclePlus />}{' '}
               {isInCollection ? 'Remove from Collection' : 'Add to Collection'}
@@ -157,7 +197,7 @@ const ImagePage = () => {
           {/* Add/Remove Image from Collection */}
 
           {/* Add/Remove Comment This is what Robert wrote */}
-          <div className='grid w-full gap-2 mb-15'>
+          {/* <div className='grid w-full gap-2 mb-15'>
             <h4>Add your comment below</h4>
             <Textarea placeholder='Type your comment here.' value={newComment} onChange={(e) => setNewComment(e.target.value)} />
             <Button className='w-fit justify-self-end'>
@@ -166,23 +206,19 @@ const ImagePage = () => {
             </Button>
           </div>
           {/* This is what Bruno wrote/fab wrote */}
-          <div className='tabs'>
+          {/* <div className='tabs'>
             <Tabs className='w-full'>
               <TabsList>
                 <TabsTrigger value='comments'>Comments</TabsTrigger>
               </TabsList>
-              {/* --------------------------------------------------------------------------- */}
-              {/* -----------------------Tracks Table TAB---------------------*/}
-              <TabsContent value='tracks'>
-                {/* --------------------------------------------------------------------------- */}
-                {/* -----------------------Tracks Table---------------------*/}
 
-                {/* --------------------------------------------------------------------------- */}
-                {/* -----------------------Comments Tab---------------------*/}
+              <TabsContent value='tracks'>
+
+
+
               </TabsContent>
               <TabsContent value='comments'>
-                {/* --------------------------------------------------------------------------- */}
-                {/* -----------------------Comment Input container---------------------*/}
+
                 <h4>Add a comment...</h4>
                 <div className='comment-box'>
                   <div className='text-area'>
@@ -195,13 +231,13 @@ const ImagePage = () => {
                   {/* <Button className='btn' onClick={handleNewComment}>
                     <Send />
                     Send
-                  </Button> */}
+
                 </div>
-                {/* --------------------------------------------------------------------------- */}
-                {/* -----------------------All comments container---------------------*/}
+
               </TabsContent>
             </Tabs>
-          </div>
+          </div >
+           */}
         </div>
       </div>
     </>
