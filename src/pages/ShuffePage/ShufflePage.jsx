@@ -24,6 +24,7 @@ const ShufflePage = ({ addImageToCollection, deleteImageToCollection }) => {
   //storing images sent to collection
   const [addedImages, setAddedImages] = useState([]);
   const [myLoading, setMyLoading] = useState(true);
+  const [progess, setProgess] = useState(0);
   // console.log("addedImages", addedImages);
   //------- Tinder Card Set up -----------------//
   const [currentIndex, setCurrentIndex] = useState(imageSample.length - 1);
@@ -119,31 +120,29 @@ const ShufflePage = ({ addImageToCollection, deleteImageToCollection }) => {
   //------- END OF - Tinder Card Set up - END OF ------------------//
 
   //Getting 10 random images
+  const getImageSample = async () => {
+    try {
+      setAddedImages([]);
+      setMyLoading(true);
+      setProgess(0);
+      // Calling for 10 images
+      const response = await axios.get(`${API_URL}/image/random`);
+      console.log("image sample =", response.data);
+      setImageSample(response.data);
+      // update the CurrentIndex for the Tinder card
+      updateCurrentIndex(response.data.length - 1);
+      // update the loading state to display the cards
+      setMyLoading(false);
+    } catch (error) {
+      console.log("Error getting image sample:", error);
+    }
+  };
   //Hooks
   useEffect(() => {
-    const getImageSample = async () => {
-      try {
-        setAddedImages([]);
-        // console.log(myLoading);
-        // Calling for 10 images
-        const response = await axios.get(`${API_URL}/image/random`);
-        console.log("image sample =", response.data);
-        setImageSample(response.data);
-        // update the CurrentIndex for the Tinder card
-        updateCurrentIndex(response.data.length - 1);
-        // update the loading state to display the cards
-        setMyLoading(false);
-      } catch (error) {
-        console.log("Error getting image sample:", error);
-      }
-    };
     getImageSample();
   }, []);
 
   //if the cards are not loaded in imageSample
-  if (myLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="flex  flex-col justify-center items-center">
@@ -156,10 +155,7 @@ const ShufflePage = ({ addImageToCollection, deleteImageToCollection }) => {
         creations to your collection or left to pass. Let your taste shape your
         unique gallery!"
       </h3>
-      {/* Loding container */}
-      {(myLoading || imageSample.length < 10) && (
-        <h3 className="text-center text-base w-3/5">Loading...</h3>
-      )}
+
       {/* SwapContainer */}
       {/* Wait for loading image is finished */}
       {!myLoading && imageSample.length === 10 && (
@@ -185,21 +181,37 @@ const ShufflePage = ({ addImageToCollection, deleteImageToCollection }) => {
                   </TinderCard>
                 );
               })}
+            <div className="flex items-center justify-center h-[300px]">
+              {!canSwipe && (
+                <div className="m-6 flex flex-col justify-center items-center">
+                  <p className="p-2">Already finish?</p>
+                  <Button className="w-full" onClick={() => getImageSample()}>
+                    Start Again
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="flex justify-between items-center">
-            <div>
-              <Button className="w-24" onClick={() => swipe("left")}>
-                Ouuuh
-              </Button>
-            </div>
-            <div>
-              <Button onClick={() => goBack()}>Undo</Button>
-            </div>
-            <div>
-              <Button className="" onClick={() => swipe("right")}>
-                Love it!
-              </Button>
-            </div>
+          <div className="flex justify-evenly items-center">
+            <Button
+              className="w-24"
+              onClick={() => swipe("left")}
+              disabled={!canSwipe}
+            >
+              Ouuuh
+            </Button>
+
+            <Button onClick={() => goBack()} disabled={!canGoBack}>
+              Undo
+            </Button>
+
+            <Button
+              className="w-24"
+              onClick={() => swipe("right")}
+              disabled={!canSwipe}
+            >
+              Love it!
+            </Button>
           </div>
         </div>
       )}
