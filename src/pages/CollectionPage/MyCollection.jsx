@@ -37,7 +37,7 @@ const MyCollection = () => {
   //Redirect the user to the image page
   const handleImageClick = (index) => {
     const imgId = userCollection[index].id;
-    nav(`/image/${imgId}`);
+    nav(`/for-frodo/${imgId}`);
   };
 
   useEffect(() => {
