@@ -44,6 +44,22 @@ const Navbar = () => {
   const [userImage, setUserImage] = useState(null);
   const { theme, setTheme } = useTheme();
 
+  //this variable is true if the dark mode is activated
+  const isDarkMode = theme === "dark";
+
+  //Functions
+  //These functions toggle the mode depending on the current mode
+  const handleLight = () => {
+    if (isDarkMode) {
+      setTheme("light");
+    }
+  };
+  const handleDark = () => {
+    if (!isDarkMode) {
+      setTheme("dark");
+    }
+  };
+
   //Hooks
   useEffect(() => {
     if (isLoggedIn && user) {
@@ -67,7 +83,7 @@ const Navbar = () => {
       <Link to="/">
         <img
           className=" w-10 h-10 md:w-16 md:h-16"
-          src={theme === "dark" ? LogoDark : LogoLight}
+          src={isDarkMode ? LogoDark : LogoLight}
           alt="Logo"
         />
       </Link>
@@ -119,12 +135,10 @@ const Navbar = () => {
                         onValueChange={setTheme}
                       >
                         <DropdownMenuRadioItem value="light">
-                          <Sun className="mr-2 h-4" />
-                          Light
+                          <Sun className="mr-2 h-4" /> Light
                         </DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="dark">
-                          <Moon className="mr-2 h-4" />
-                          Dark
+                          <Moon className="mr-2 h-4" /> Dark
                         </DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="system">
                           <SunMoon className="mr-2 h-4" />
@@ -137,10 +151,8 @@ const Navbar = () => {
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuLabel>
-                  <DropdownMenuItem onClick={handleLogout}>
-                    Logout{" "}
-                  </DropdownMenuItem>
+                <DropdownMenuLabel onClick={handleLogout}>
+                  Logout
                 </DropdownMenuLabel>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -158,6 +170,7 @@ const Navbar = () => {
                 <DropdownMenuItem>My Account</DropdownMenuItem>
               </Link>
 
+              <DropdownMenuSeparator />
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
@@ -173,15 +186,13 @@ const Navbar = () => {
                         <Moon className="mr-2 h-4" /> Dark
                       </DropdownMenuRadioItem>
                       <DropdownMenuRadioItem value="system">
-                        <SunMoon className="mr-2 h-4" /> System
+                        <SunMoon className="mr-2 h-4" />
+                        System
                       </DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>
               </DropdownMenuSub>
-
-              <DropdownMenuSeparator />
-
               <DropdownMenuLabel onClick={handleLogout}>
                 Logout
               </DropdownMenuLabel>
