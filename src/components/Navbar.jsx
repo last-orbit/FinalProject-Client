@@ -67,9 +67,9 @@ const Navbar = () => {
       const getUserImage = async () => {
         try {
           const response = await axios.get(`${API_URL}/user/${user._id}`);
-          console.log("Full response:", response.data.image);
+          // console.log("Full response:", response.data.image);
           setUserImage(response.data.oneUser.image);
-          console.log(response.data.oneUser.image);
+          // console.log(response.data.oneUser.image);
         } catch (error) {
           console.log("Didn't manage to get user image", error);
         }

@@ -22,7 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter
+  DialogFooter,
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -36,9 +36,8 @@ import {
   SendHorizontal,
 } from 'lucide-react';
 
-const ImagePage = ({ deleteImageToCollection,
-  addImageToCollection }) => {
-  const {user} = useContext(AuthContext);
+const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
+  const { user } = useContext(AuthContext);
   const { imageId } = useParams();
   /******************* States **************/
   // grabs the image
@@ -52,8 +51,9 @@ const ImagePage = ({ deleteImageToCollection,
   // Checks if Image is in Collection
   const [isInCollection, setIsInCollection] = useState(false);
 
-
   /******************* Functions **************/
+
+  //gets the image by id
   const getImage = async () => {
     try {
       const response = await axios.get(`${API_URL}/image/${imageId}`);
@@ -63,7 +63,24 @@ const ImagePage = ({ deleteImageToCollection,
       console.log(error);
     }
   };
-
+  // Checks if Image is in Collection
+  // const checkCollection = async () => {
+  //   try {
+  //     const { data } = await axios.get(`${API_URL}/collection/${user._id}`);
+  //     const userCollection = data.collection || [];
+  //     // console.log(userCollection);
+  //     const imageExists = userCollection.some((image) => image.id === imageId);
+  //     setIsInCollection(imageExists);
+  //     // console.log(imageExists, userCollection);
+  //     // console.log(userCollection);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // if (imageId) {
+  //   checkCollection();
+  // console.log(setIsInCollection);
+  // }
   // const getComments = async () => {
   //   try {
   //     // const reponse = await axios.get(`${API_URL}/comment/${imageId}`);
@@ -74,37 +91,17 @@ const ImagePage = ({ deleteImageToCollection,
   //   }
   // }
 
-  // Checks if Image is in Collection
-  const checkInCollection = async () => {
-    try {
-      const { data } = await axios.get(`${API_URL}/collection/${user._id}`);
-      const userCollection = data.collection || [];
-      console.log(userCollection);
-      const imageExists = userCollection.some((image) => image.id === imageId);
-      setIsInCollection(imageExists);
-      console.log(userCollection[0]._id)
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  if (imageId) {
-    checkInCollection();
-  }
-
-
-
-
   const handleNewComment = async () => {
     try {
-      const response = await axios.post(`${API_URL}/comment/${imageId}`, { comment: newComment });
+      const response = await axios.post(`${API_URL}/comment/${imageId}`, {
+        comment: newComment,
+      });
       console.log(response);
       setNewComment('');
     } catch (error) {
       console.log(error);
     }
-  }
-
-
+  };
 
   /******************* Use Effect for getting the Images **************/
   // useEffect(() => {
@@ -127,8 +124,26 @@ const ImagePage = ({ deleteImageToCollection,
 
   useEffect(() => {
     getImage();
+    // checkCollection();
+    const CheckIfInCollection = async () => {
+      // const body = { data: { userId: user._id, imageId: imageId } };
+      try {
+        const { data } = await axios.get(
+          `${API_URL}/collection/isincollection`,
+          { params: { userId: user._id, imageId: imageId } }
+        );
+        // console.log(data);
+        setIsInCollection(data.isInCollection);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    // if (user) {
+    //   // console.log(CheckIfInCollection())
+    //   // setIsInCollection(CheckIfInCollection());
+    // }
     // getComments();
-  }, [imageId]);
+  }, [user, imageId]);
   /******************* If there are no images, show a loading screen **************/
   if (!currentImage) {
     return (
@@ -143,11 +158,6 @@ const ImagePage = ({ deleteImageToCollection,
     );
   }
 
-  // if (!isInCollection) {
-  //   return (
-
-  //   );
-  // }
   return (
     <>
       {/* Image */}
@@ -183,11 +193,11 @@ const ImagePage = ({ deleteImageToCollection,
             <Button
               className='w-fit my-5 '
               variant={isInCollection ? 'secondary' : ''}
-              onclick={() =>
+              onClick={() => {
                 isInCollection
-                  ? deleteImageToCollection(imageId)
-                  : addImageToCollection(imageId)
-              }
+                  ? (deleteImageToCollection(imageId) , setIsInCollection(false))
+                  : (addImageToCollection(imageId) , setIsInCollection(true));
+              }}
             >
               {' '}
               {isInCollection ? <CircleMinus /> : <CirclePlus />}{' '}
@@ -197,7 +207,7 @@ const ImagePage = ({ deleteImageToCollection,
           {/* Add/Remove Image from Collection */}
 
           {/* Add/Remove Comment This is what Robert wrote */}
-          {/* <div className='grid w-full gap-2 mb-15'>
+          <div className='grid w-full gap-2 mb-15'>
             <h4>Add your comment below</h4>
             <Textarea placeholder='Type your comment here.' value={newComment} onChange={(e) => setNewComment(e.target.value)} />
             <Button className='w-fit justify-self-end'>
