@@ -14,8 +14,44 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import Footer from "./components/Footer";
 import MyFeedPage from "./pages/MyFeed/MyFeedPage";
 import { ThemeProvider } from "./components/ThemeProvider";
+import axios from "axios";
+import { API_URL } from "../config";
+import { useContext } from "react";
+import { AuthContext } from "./contexts/AuthContext";
 
 function App() {
+  const { user } = useContext(AuthContext);
+  //FUNCTIONS TO PASS AS PROPS
+  //Adding an image to collection (need the user from the useContext)
+  const addImageToCollection = async (imageId) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/collection/addtocollection`,
+        {
+          userId: user._id,
+          imageId: imageId,
+        }
+      );
+    } catch (error) {
+      console.log("did not manage to add image to collection", error);
+    }
+  };
+
+  //removing an image from collection (need the user from the useContext)
+  const deleteImageToCollection = async (imageId) => {
+    try {
+      const response = await axios.delete(
+        `${API_URL}/collection/removefromcollection`,
+        {
+          userId: user._id,
+          imageId: imageId,
+        }
+      );
+    } catch (error) {
+      console.log("did not manage to delete image to collection", error);
+    }
+  };
+
   return (
     <main>
       <ThemeProvider>
@@ -30,7 +66,7 @@ function App() {
             path="/for-frodo/:imageId"
             element={
               // <ProtectedRoute>
-                <ImagePage />
+              <ImagePage />
               // </ProtectedRoute>
             }
           />
@@ -60,7 +96,10 @@ function App() {
             path="/the-eagles-are-coming"
             element={
               <ProtectedRoute>
-                <ShufflePage />
+                <ShufflePage
+                  deleteImageToCollection={deleteImageToCollection}
+                  addImageToCollection={addImageToCollection}
+                />
               </ProtectedRoute>
             }
           />

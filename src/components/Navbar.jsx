@@ -8,7 +8,7 @@ import { useTheme } from "@/components/ThemeProvider";
 //Medias
 import LogoLight from "../assets/LogoLight.png";
 import LogoDark from "../assets/LogoDark.png";
-import { Moon, Sun, Menu } from "lucide-react";
+import { Moon, Sun, Menu, SunMoon } from "lucide-react";
 
 //Components
 import {
@@ -23,6 +23,8 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuRadioItem,
+  DropdownMenuRadioGroup,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -128,22 +130,21 @@ const Navbar = () => {
                   <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent>
-                      <DropdownMenuItem
-                        onClick={handleLight}
-                        className={
-                          isDarkMode ? "text-gray-600" : "text-gray-400"
-                        }
+                      <DropdownMenuRadioGroup
+                        value={theme}
+                        onValueChange={setTheme}
                       >
-                        <Sun /> Light
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={handleDark}
-                        className={
-                          isDarkMode ? "text-gray-400" : "text-gray-300"
-                        }
-                      >
-                        <Moon /> Dark
-                      </DropdownMenuItem>
+                        <DropdownMenuRadioItem value="light">
+                          <Sun className="mr-2 h-4" /> Light
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="dark">
+                          <Moon className="mr-2 h-4" /> Dark
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="system">
+                          <SunMoon className="mr-2 h-4" />
+                          System
+                        </DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>
                 </DropdownMenuSub>
@@ -169,28 +170,29 @@ const Navbar = () => {
                 <DropdownMenuItem>My Account</DropdownMenuItem>
               </Link>
 
+              <DropdownMenuSeparator />
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
-                    <DropdownMenuItem
-                      onClick={handleLight}
-                      className={isDarkMode ? "text-gray-600" : "text-gray-400"}
+                    <DropdownMenuRadioGroup
+                      value={theme}
+                      onValueChange={setTheme}
                     >
-                      <Sun /> Light
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={handleDark}
-                      className={isDarkMode ? "text-gray-400" : "text-gray-300"}
-                    >
-                      <Moon /> Dark
-                    </DropdownMenuItem>
+                      <DropdownMenuRadioItem value="light">
+                        <Sun className="mr-2 h-4" /> Light
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="dark">
+                        <Moon className="mr-2 h-4" /> Dark
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="system">
+                        <SunMoon className="mr-2 h-4" />
+                        System
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>
               </DropdownMenuSub>
-
-              <DropdownMenuSeparator />
-
               <DropdownMenuLabel onClick={handleLogout}>
                 Logout
               </DropdownMenuLabel>
