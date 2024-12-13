@@ -43,8 +43,10 @@ function App() {
       const response = await axios.delete(
         `${API_URL}/collection/removefromcollection`,
         {
-          userId: user._id,
-          imageId: imageId,
+          data: {
+            userId: user._id,
+            imageId: imageId,
+          },
         }
       );
     } catch (error) {
