@@ -64,7 +64,9 @@ const LoginPage = () => {
       </form>
       <p className='mt-4'>
         Don&#39;t have an account?{' '}
-        <a href="/i'm-going-on-an-adventure">Sign Up</a>
+        <a className='underline font-medium' href="/i'm-going-on-an-adventure">
+          Sign Up
+        </a>
       </p>
     </>
   );

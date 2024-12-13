@@ -77,13 +77,14 @@ import { API_URL } from '../../../config';
               />
             </div>
             <div>
-              <Button>
-                Sign Up
-              </Button>
+              <Button>Sign Up</Button>
             </div>
           </form>
           <p className='mt-4'>
-            Already have an account? <a href='/you-shall-not-pass'>Login</a>
+            Already have an account?{' '}
+            <a className='underline font-medium' href='/you-shall-not-pass'>
+              Login
+            </a>
           </p>
         </div>
         // Add alert if email already exist or alert of
