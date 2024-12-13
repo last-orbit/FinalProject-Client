@@ -8,7 +8,7 @@ import { useTheme } from "@/components/ThemeProvider";
 //Medias
 import LogoLight from "../assets/LogoLight.png";
 import LogoDark from "../assets/LogoDark.png";
-import { Moon, Sun, Menu } from "lucide-react";
+import { Moon, Sun, Menu, SunMoon } from "lucide-react";
 
 //Components
 import {
@@ -23,6 +23,8 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuRadioItem,
+  DropdownMenuRadioGroup,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -41,22 +43,6 @@ const Navbar = () => {
   const { user, isLoggedIn, handleLogout } = useContext(AuthContext);
   const [userImage, setUserImage] = useState(null);
   const { theme, setTheme } = useTheme();
-
-  //this variable is true if the dark mode is activated
-  const isDarkMode = theme === "dark";
-
-  //Functions
-  //These functions toggle the mode depending on the current mode
-  const handleLight = () => {
-    if (isDarkMode) {
-      setTheme("light");
-    }
-  };
-  const handleDark = () => {
-    if (!isDarkMode) {
-      setTheme("dark");
-    }
-  };
 
   //Hooks
   useEffect(() => {
@@ -81,7 +67,7 @@ const Navbar = () => {
       <Link to="/">
         <img
           className=" w-10 h-10 md:w-16 md:h-16"
-          src={isDarkMode ? LogoDark : LogoLight}
+          src={theme === "dark" ? LogoDark : LogoLight}
           alt="Logo"
         />
       </Link>
@@ -128,30 +114,33 @@ const Navbar = () => {
                   <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent>
-                      <DropdownMenuItem
-                        onClick={handleLight}
-                        className={
-                          isDarkMode ? "text-gray-600" : "text-gray-400"
-                        }
+                      <DropdownMenuRadioGroup
+                        value={theme}
+                        onValueChange={setTheme}
                       >
-                        <Sun /> Light
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={handleDark}
-                        className={
-                          isDarkMode ? "text-gray-400" : "text-gray-300"
-                        }
-                      >
-                        <Moon /> Dark
-                      </DropdownMenuItem>
+                        <DropdownMenuRadioItem value="light">
+                          <Sun className="mr-2 h-4" />
+                          Light
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="dark">
+                          <Moon className="mr-2 h-4" />
+                          Dark
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="system">
+                          <SunMoon lassName="mr-2 h-3" />
+                          System
+                        </DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>
                 </DropdownMenuSub>
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuLabel onClick={handleLogout}>
-                  Logout
+                <DropdownMenuLabel>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    Logout{" "}
+                  </DropdownMenuItem>
                 </DropdownMenuLabel>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -173,18 +162,20 @@ const Navbar = () => {
                 <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
-                    <DropdownMenuItem
-                      onClick={handleLight}
-                      className={isDarkMode ? "text-gray-600" : "text-gray-400"}
+                    <DropdownMenuRadioGroup
+                      value={theme}
+                      onValueChange={setTheme}
                     >
-                      <Sun /> Light
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={handleDark}
-                      className={isDarkMode ? "text-gray-400" : "text-gray-300"}
-                    >
-                      <Moon /> Dark
-                    </DropdownMenuItem>
+                      <DropdownMenuRadioItem value="light">
+                        <Sun /> Light
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="dark">
+                        <Moon /> Dark
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="system">
+                        System
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>
               </DropdownMenuSub>
