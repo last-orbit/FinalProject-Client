@@ -29,9 +29,9 @@ function App() {
           <Route
             path="/for-frodo/:imageId"
             element={
-              <ProtectedRoute>
+              // <ProtectedRoute>
                 <ImagePage />
-              </ProtectedRoute>
+              // </ProtectedRoute>
             }
           />
 
