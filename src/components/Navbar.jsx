@@ -127,7 +127,7 @@ const Navbar = () => {
                           Dark
                         </DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="system">
-                          <SunMoon lassName="mr-2 h-3" />
+                          <SunMoon className="mr-2 h-4" />
                           System
                         </DropdownMenuRadioItem>
                       </DropdownMenuRadioGroup>
@@ -167,13 +167,13 @@ const Navbar = () => {
                       onValueChange={setTheme}
                     >
                       <DropdownMenuRadioItem value="light">
-                        <Sun /> Light
+                        <Sun className="mr-2 h-4" /> Light
                       </DropdownMenuRadioItem>
                       <DropdownMenuRadioItem value="dark">
-                        <Moon /> Dark
+                        <Moon className="mr-2 h-4" /> Dark
                       </DropdownMenuRadioItem>
                       <DropdownMenuRadioItem value="system">
-                        System
+                        <SunMoon className="mr-2 h-4" /> System
                       </DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
                   </DropdownMenuSubContent>
