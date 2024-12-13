@@ -24,7 +24,7 @@ const ShufflePage = ({ addImageToCollection, deleteImageToCollection }) => {
   //storing images sent to collection
   const [addedImages, setAddedImages] = useState([]);
   const [myLoading, setMyLoading] = useState(true);
-
+  // console.log("addedImages", addedImages);
   //------- Tinder Card Set up -----------------//
   const [currentIndex, setCurrentIndex] = useState(imageSample.length - 1);
   const [lastDirection, setLastDirection] = useState();
@@ -75,6 +75,11 @@ const ShufflePage = ({ addImageToCollection, deleteImageToCollection }) => {
         imageSample[currentIndex]._id
       );
       addImageToCollection(imageSample[currentIndex]._id);
+      console.log({
+        userId: user._id,
+        imageId: imageSample[currentIndex]._id,
+      });
+
       addedImages.push(imageSample[currentIndex]._id);
     }
   };
@@ -82,12 +87,34 @@ const ShufflePage = ({ addImageToCollection, deleteImageToCollection }) => {
   const goBack = async () => {
     console.log("back");
     if (!canGoBack) return;
+    const imageToRemove = imageSample[currentIndex + 1]._id;
+
     const newIndex = currentIndex + 1;
     updateCurrentIndex(newIndex);
     await childRefs[newIndex].current.restoreCard();
 
     //Remove the image from the collection
-    //   if(canGoBack && is)
+    console.log(
+      "image to remove",
+      imageToRemove,
+      "-----to remove from Array----",
+      addedImages
+    );
+    if (canGoBack && addedImages.includes(imageToRemove)) {
+      console.log({
+        userId: user._id,
+        imageId: imageToRemove,
+      });
+      deleteImageToCollection(imageToRemove);
+      addedImages.splice(
+        addedImages.findIndex((image) => image === imageToRemove),
+        1
+      );
+      console.log(
+        "image has been removed from collection. Here is the new array : ",
+        addedImages
+      );
+    }
   };
   //------- END OF - Tinder Card Set up - END OF ------------------//
 
@@ -96,6 +123,7 @@ const ShufflePage = ({ addImageToCollection, deleteImageToCollection }) => {
   useEffect(() => {
     const getImageSample = async () => {
       try {
+        setAddedImages([]);
         // console.log(myLoading);
         // Calling for 10 images
         const response = await axios.get(`${API_URL}/image/random`);
