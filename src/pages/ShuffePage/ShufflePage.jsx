@@ -3,6 +3,7 @@ import { API_URL } from "../../../config";
 import React from "react";
 import { useEffect, useState, useRef, useMemo, useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
+import { Blurhash } from "react-blurhash";
 
 import TinderCard from "react-tinder-card";
 import {
@@ -166,21 +167,35 @@ const ShufflePage = ({ addImageToCollection, deleteImageToCollection }) => {
                 return (
                   <TinderCard
                     ref={childRefs[index]}
-                    className=" absolute"
+                    className="absolute"
                     key={image._id}
                     onSwipe={(dir) => swiped(dir, image._id, index)}
                     onCardLeftScreen={() => outOfFrame(image._id, index)}
                   >
                     <Card className="relative w-[80vw] max-w-[300px] h-[300px] bg-white rounded-2xl shadow-lg overflow-hidden">
+                      <Blurhash
+                        hash={image.blur_hash}
+                        width={400}
+                        height={300}
+                        resolutionX={32}
+                        resolutionY={32}
+                        punch={1}
+                        className="absolute inset-0 w-full h-full object-cover blur-md"
+                      />
+
                       <img
-                        src={image.photo_image_url}
+                        src={`${image.photo_image_url}?q=30&format=auto`}
                         alt="Card image"
-                        className="w-full h-full object-cover"
+                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                          myLoading ? "opacity-0" : "opacity-100"
+                        }`}
+                        onLoad={() => setMyLoading(false)}
                       />
                     </Card>
                   </TinderCard>
                 );
               })}
+
             <div className="flex items-center justify-center h-[300px]">
               {!canSwipe && (
                 <div className="m-6 flex flex-col justify-center items-center">
