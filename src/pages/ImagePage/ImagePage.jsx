@@ -27,7 +27,6 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  Headphones,
   Pencil,
   Send,
   CirclePlus,
@@ -43,13 +42,17 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
   // grabs the image
   const [currentImage, setCurrentImage] = useState(null);
   // grabs the comments
-  const [comments, setComments] = useState();
+  const [comments, setComments] = useState([]);
   // Edits the comment
   const [editComment, setEditComment] = useState("");
   // For New Comments
   const [newComment, setNewComment] = useState("");
+  // For Loading Comments
+  const [isLoadingComments, setIsLoadingComments] = useState(true);
   // Checks if Image is in Collection
   const [isInCollection, setIsInCollection] = useState(false);
+  //gets user image for avatar
+  const [userImage, setUserImage] = useState(null);
 
   /******************* Functions **************/
 
@@ -63,68 +66,90 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
       console.log(error);
     }
   };
-  // Checks if Image is in Collection
-  // const checkCollection = async () => {
-  //   try {
-  //     const { data } = await axios.get(`${API_URL}/collection/${user._id}`);
-  //     const userCollection = data.collection || [];
-  //     // console.log(userCollection);
-  //     const imageExists = userCollection.some((image) => image.id === imageId);
-  //     setIsInCollection(imageExists);
-  //     // console.log(imageExists, userCollection);
-  //     // console.log(userCollection);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  // if (imageId) {
-  //   checkCollection();
-  // console.log(setIsInCollection);
-  // }
-  // const getComments = async () => {
-  //   try {
-  //     // const reponse = await axios.get(`${API_URL}/comment/${imageId}`);
-  //     const foundComments = data;
-  //     setComments(foundComments);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
-  const handleNewComment = async () => {
+  //gets the comments from the image
+  const getComments = async () => {
+    setIsLoadingComments(true);
     try {
-      const response = await axios.post(`${API_URL}/comment/${imageId}`, {
-        comment: newComment,
-      });
-      console.log(response);
-      setNewComment("");
+      const {data} = await axios.get(`${API_URL}/comment/${imageId}`);
+      setComments(data.comments);
+      // console.log(data.comments);
     } catch (error) {
-      console.log(error);
+      console.log("Error fetching comments ", error);
+    } finally {
+      setIsLoadingComments(false);
+    }
+  }
+
+  // Handles New Comment
+  const handleNewComment = async () => {
+    if (newComment.trim() === "") return;
+    if (newComment !== "") {
+      const newCommentData = {
+        user_id: user._id,
+        comment: newComment,
+        username: user.username,
+        image_id: imageId,
+
+      }
+
+      try {
+        const {data} = await axios.post(`${API_URL}/comment/create`, newCommentData);
+        const addedComment = data;
+        console.log("added Comment ", addedComment);
+        setComments([data.comments, ...comments]);
+        setNewComment(""); // Clears the text area
+      } catch (error) {
+        console.log ("failed to get comments" , error);
+      }
     }
   };
 
-  /******************* Use Effect for getting the Images **************/
-  // useEffect(() => {
-  //   // const foundImage = images.find((oneImage) => oneImage.id == imageId);
-  //   // setCurrentImage(foundImage);
-  //   /***** API Call for the Images *****/
-  //   // axios
-  //   //   .get(`${API_URL}/image/${imageId}`)
-  //   //   .then((res) => {
-  //   //     const foundImage = res.data;
-  //   //     setCurrentImage(foundImage);
-  //   //     // console.log(foundImage);
-  //   //   })
-  //   //   .catch((error) => {
-  //   //     console.log(error);
-  //   //   });
-  //   getImage();
-  //   getComments();
-  // }, [imageId]);
+// handles Deleting Comments
+  const handleDeleteComment = async (commentId) => {
+    try {
+       const deletedComment = await axios.delete(`${API_URL}/comment/delete/${commentId}`);
+      setComments(comments.filter((comment) => comment._id !== commentId));
+      console.log('deleted comment',  deletedComment)
+    } catch (error) {
+      console.log('error with deleting the comment', error);
+    }
+  };
+
+
+  // // Handles updating comments
+  // const handleUpdateComment = async (commentId) => {
+  //   try {
+  //     const updatedComment = await axios.put(`${API_URL}/comment/update/${commentId}`, {
+  //       comment: editcomment
+  //     });
+  //     setComments(comments.map((comment) => comment._id === commentId ? updatedComment.data : comment));
+  //   } catch (error) {
+  //     console.log('error with updating the comment', error);
+  //   }
+  // }
+
+  // function handleUpdateComment(comment) {
+  //   let update = {
+  //     comment: editcomment,
+  //     username: user.username,
+  //     userId: user._id,
+  //     imageId: imageId,
+  //   }
+  //   let updateArray = comments.map((oneComment) => {
+  //     if (oneComment._id === comment._id) {
+  //       return update;
+  //     } else {
+  //       return oneComment;
+  //     }
+  //   });
+  //   setComments(updateArray);
+  // }
 
   useEffect(() => {
+
     getImage();
     // checkCollection();
+    //Checks if current image is in collection
     const checkIfInCollection = async () => {
       // const body = { data: { userId: user._id, imageId: imageId } };
       try {
@@ -132,18 +157,27 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
           `${API_URL}/collection/isincollection`,
           { params: { userId: user._id, imageId: imageId } }
         );
-        console.log(data);
+        // console.log(data);
         setIsInCollection(data.isInCollection);
       } catch (error) {
         console.log(error);
       }
     };
-    checkIfInCollection();
-    // if (user) {
-    //   // console.log(CheckIfInCollection())
-    //   // setIsInCollection(CheckIfInCollection());
-    // }
-    // getComments();
+    //Function gets user image
+    const getUserImage = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/user/${user._id}`);
+        // console.log("Full response:", response.data.image);
+        setUserImage(response.data.oneUser.image);
+        // console.log(response.data.oneUser.image);
+      } catch (error) {
+        console.log("Didn't manage to get user image", error);
+      }
+    };
+    getUserImage();
+    checkIfInCollection(); //this will see if image is in collection or not
+    handleNewComment();
+    getComments();  //Fetches Comments if any
   }, [user, imageId]);
   /******************* If there are no images, show a loading screen **************/
   if (!currentImage) {
@@ -162,13 +196,13 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
   return (
     <>
       {/* Image */}
-      <div className="mt-10  gap-2 m-0 w-7/12 justify-self-center  h-auto">
-        <div className="mb-5">
-          <Card className="relative w-[80vw] max-w-[300px] h-[300px] bg-white rounded-2xl shadow-lg overflow-hidden">
+      <div className='mt-10  gap-2 m-0 w-7/12 justify-self-center  h-auto'>
+        <div className='mb-5'>
+          <Card className='relative w-[80vw] max-w-[300px] h-[300px] bg-white rounded-2xl shadow-lg overflow-hidden '>
             <img
-              className="w-full h-full object-cover"
+              className='w-full h-full object-cover '
               src={currentImage.photo_image_url}
-              alt="The Image goes here"
+              alt='The Image goes here'
             />
           </Card>
         </div>
@@ -180,81 +214,125 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
           />
         </Card> */}
         {/* Image details */}
-        <div className="pb-20">
-          <div className="flex gap-2 justify-between">
-            <p className="text-2xl font-semibold capitalize">
-              {currentImage.ai_description}{" "}
-            </p>{" "}
+        <div className='pb-20'>
+          <div className='flex gap-2 justify-between'>
+            <p className='text-2xl font-semibold capitalize'>
+              {currentImage.ai_description}{' '}
+            </p>{' '}
             <p>
-              {" "}
-              Photo By : {currentImage.photographer_first_name}{" "}
+              {' '}
+              Photo By : {currentImage.photographer_first_name}{' '}
               {currentImage.photographer_last_name}
-            </p>{" "}
+            </p>{' '}
           </div>
-          {/* Bottom Section */}
-          <div className="flex gap-2 justify-self-end h-48 ">
+          {/* Add to Collection Section */}
+          <div className='flex gap-2 justify-self-end h-24 '>
             <Button
-              className="w-fit my-5 "
-              variant={isInCollection ? "secondary" : ""}
+              className='w-fit my-5 '
+              variant={isInCollection ? 'secondary' : ''}
               onClick={() => {
                 isInCollection
                   ? (deleteImageToCollection(imageId), setIsInCollection(false))
                   : (addImageToCollection(imageId), setIsInCollection(true));
               }}
             >
-              {" "}
-              {isInCollection ? <CircleMinus /> : <CirclePlus />}{" "}
-              {isInCollection ? "Remove from Collection" : "Add to Collection"}
-            </Button>{" "}
+              {' '}
+              {isInCollection ? <CircleMinus /> : <CirclePlus />}{' '}
+              {isInCollection ? 'Remove from Collection' : 'Add to Collection'}
+            </Button>{' '}
           </div>
-          {/* Add/Remove Image from Collection */}
+          {/* Comment Section */}
+          <div className='grid w-full gap-2 mb-15'>
+            <div className='flex flex-col gap-4'>
+              {comments && user && comments.map((comment) => {
+                return (
+                  <>
+                    <Card
+                      key={comment._id}
+                      className='flex gap-2 shadow-md shadow-slate-300 h-24 rounded-lg items-center '
+                    >
+                      <Avatar className='ml-2'>
+                        <AvatarImage
+                          src={
+                            userImage ||
+                            'https://www.creativefabrica.com/wp-content/uploads/2022/09/15/Black-ink-drop-mark-Paint-stain-splatte-Graphics-38548553-1-1-580x387.png'
+                          }
+                          alt='user'
+                          className='w-10 h-10 rounded-full'
+                        />
+                        <AvatarFallback>??</AvatarFallback>
+                      </Avatar>
+                      <div className='flex justify-between w-11/12'>
+                        <div>
+                          <div className='flex gap-2'>
+                            <p className='font-semibold'>{user.username}:</p>
+                            <p className='text-start'>{comment.comment}</p>
+                          </div>
+                          <div>
+                            <p>{comment.createdAt}</p>
+                          </div>
+                        </div>
 
-          {/* Add/Remove Comment This is what Robert wrote */}
-          <div className="grid w-full gap-2 mb-15">
+                        {/* Actions Buttons */}
+                        <div className='flex  justify-center'>
+                          {/* <Dialog>
+                          <DialogTrigger>
+                            <Button>
+                              <Pencil />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Edit Comment</DialogTitle>
+                              <DialogDescription>
+                                <Textarea
+                                  placeholder='Edit your comment.'
+                                  value={editComment.comment}
+                                  onChange={(e) => setEditComment(e.target.value)}
+                                />
+                              </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter>
+                              <Button
+                                onClick={() => handleUpdateComment(comment._id)}
+                              >
+                                Save
+                              </Button>
+                            </DialogFooter>
+                            </DialogContent>
+                        </Dialog> */}
+                          {/* Delete Button */}
+                          <Button
+                            variant='destructive'
+                            onClick={() => handleDeleteComment(comment._id)}
+                            className='w-fit
+                            '
+                          >
+                            <CircleX />
+                          </Button>
+                        </div>
+                      </div>
+                    </Card>
+                  </>
+                );}
+              )}
+            </div>
             <h4>Add your comment below</h4>
+
             <Textarea
-              placeholder="Type your comment here."
+              placeholder='Type your comment here.'
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
             />
-            <Button className="w-fit justify-self-end">
+            <Button
+              className='w-fit justify-self-end'
+              disabled={!newComment.trim()}
+              onClick={handleNewComment}
+            >
               Send comment
               <SendHorizontal />
             </Button>
           </div>
-          {/* This is what Bruno wrote/fab wrote */}
-          {/* <div className='tabs'>
-            <Tabs className='w-full'>
-              <TabsList>
-                <TabsTrigger value='comments'>Comments</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value='tracks'>
-
-
-
-              </TabsContent>
-              <TabsContent value='comments'>
-
-                <h4>Add a comment...</h4>
-                <div className='comment-box'>
-                  <div className='text-area'>
-                    <Textarea
-                      placeholder='Type your comment here.'
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                    />
-                  </div>
-                  {/* <Button className='btn' onClick={handleNewComment}>
-                    <Send />
-                    Send
-
-                </div>
-
-              </TabsContent>
-            </Tabs>
-          </div >
-           */}
         </div>
       </div>
     </>
