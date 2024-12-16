@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { useContext } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import axios from "axios";
-import { API_URL } from "../../../config";
-import { data, useParams } from "react-router-dom";
-import { Skeleton } from "@/components/ui/skeleton";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { API_URL } from '../../../config';
+import { useContext } from 'react';
+import { useParams } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthContext';
+import { Blurhash } from 'react-blurhash';
+import { format, formatDistanceToNow } from 'date-fns';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Card,
   CardContent,
@@ -14,7 +16,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -23,17 +25,10 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Pencil,
-  Send,
-  CirclePlus,
-  CircleMinus,
-  CircleX,
-  SendHorizontal,
-} from "lucide-react";
+} from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { CirclePlus, CircleMinus, CircleX, SendHorizontal } from 'lucide-react';
 
 const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
   const { user } = useContext(AuthContext);
@@ -44,11 +39,13 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
   // grabs the comments
   const [comments, setComments] = useState([]);
   // Edits the comment
-  const [editComment, setEditComment] = useState("");
+  const [editComment, setEditComment] = useState('');
   // For New Comments
-  const [newComment, setNewComment] = useState("");
+  const [newComment, setNewComment] = useState('');
   // For Loading Comments
   const [isLoadingComments, setIsLoadingComments] = useState(true);
+  // Loader for Images
+  const [myLoading, setMyLoading] = useState(true);
   // Checks if Image is in Collection
   const [isInCollection, setIsInCollection] = useState(false);
   //gets user image for avatar
@@ -59,9 +56,11 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
   //gets the image by id
   const getImage = async () => {
     try {
+      setMyLoading(true);
       const response = await axios.get(`${API_URL}/image/${imageId}`);
       const foundImage = response.data;
       setCurrentImage(foundImage);
+      setMyLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -70,51 +69,53 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
   const getComments = async () => {
     setIsLoadingComments(true);
     try {
-      const {data} = await axios.get(`${API_URL}/comment/${imageId}`);
+      const { data } = await axios.get(`${API_URL}/comment/${imageId}`);
       setComments(data.comments);
       // console.log(data.comments);
     } catch (error) {
-      console.log("Error fetching comments ", error);
+      console.log('Error fetching comments ', error);
     } finally {
       setIsLoadingComments(false);
     }
-  }
+  };
 
   // Handles New Comment
   const handleNewComment = async () => {
-    if (newComment.trim() === "") return;
-    if (newComment !== "") {
+    if (newComment) {
       const newCommentData = {
         user_id: user._id,
         comment: newComment,
         username: user.username,
         image_id: imageId,
-
-      }
+      };
 
       try {
-        const {data} = await axios.post(`${API_URL}/comment/create`, newCommentData);
+        const { data } = await axios.post(
+          `${API_URL}/comment/create`,
+          newCommentData
+        );
         const addedComment = data;
-        console.log("added Comment ", addedComment);
-        setComments([data.comments, ...comments]);
-        setNewComment(""); // Clears the text area
+        console.log('added Comment ', addedComment);
+        setComments([data, ...comments]);
+        setNewComment(''); // Clears the text area
       } catch (error) {
-        console.log ("failed to get comments" , error);
+        console.log('failed to get comments', error);
       }
     }
   };
 
-// handles Deleting Comments
+  // handles Deleting Comments
   const handleDeleteComment = async (commentId) => {
     try {
-       const deletedComment = await axios.delete(`${API_URL}/comment/delete/${commentId}`);
+      const deletedComment = await axios.delete(
+        `${API_URL}/comment/delete/${commentId}`
+      );
       setComments(comments.filter((comment) => comment._id !== commentId));
-      console.log('deleted comment',  deletedComment)
+      console.log('deleted comment', deletedComment);
     } catch (error) {
       console.log('error with deleting the comment', error);
     }
   };
-
 
   // // Handles updating comments
   // const handleUpdateComment = async (commentId) => {
@@ -128,25 +129,7 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
   //   }
   // }
 
-  // function handleUpdateComment(comment) {
-  //   let update = {
-  //     comment: editcomment,
-  //     username: user.username,
-  //     userId: user._id,
-  //     imageId: imageId,
-  //   }
-  //   let updateArray = comments.map((oneComment) => {
-  //     if (oneComment._id === comment._id) {
-  //       return update;
-  //     } else {
-  //       return oneComment;
-  //     }
-  //   });
-  //   setComments(updateArray);
-  // }
-
   useEffect(() => {
-
     getImage();
     // checkCollection();
     //Checks if current image is in collection
@@ -177,17 +160,18 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
     getUserImage();
     checkIfInCollection(); //this will see if image is in collection or not
     handleNewComment();
-    getComments();  //Fetches Comments if any
+    getComments(); //Fetches Comments if any
   }, [user, imageId]);
   /******************* If there are no images, show a loading screen **************/
+  // console.log(comments[0].comment);
   if (!currentImage) {
     return (
-      <div className="flex flex-col space-y-3 justify-self-center align-self-center mt-10">
-        <Skeleton className="h-[250px] w-[300px] rounded-xl" />
-        <div className="space-y-4 justify-self-end">
-          <Skeleton className="h-4 w-[250px] mt-7 justify-self-end" />
-          <Skeleton className="h-4 w-[200px] justify-self-end" />
-          <Skeleton className="h-4 w-[200px] justify-self-end" />
+      <div className='flex flex-col space-y-3 justify-self-center align-self-center mt-10'>
+        <Skeleton className='h-[250px] w-[300px] rounded-xl' />
+        <div className='space-y-4 justify-self-end'>
+          <Skeleton className='h-4 w-[250px] mt-7 justify-self-end' />
+          <Skeleton className='h-4 w-[200px] justify-self-end' />
+          <Skeleton className='h-4 w-[200px] justify-self-end' />
         </div>
       </div>
     );
@@ -197,22 +181,27 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
     <>
       {/* Image */}
       <div className='mt-10  gap-2 m-0 w-7/12 justify-self-center  h-auto'>
-        <div className='mb-5'>
+        <div className='mb-5 justify-self-center'>
           <Card className='relative w-[80vw] max-w-[300px] h-[300px] bg-white rounded-2xl shadow-lg overflow-hidden '>
+            <Blurhash
+              hash={currentImage.blur_hash}
+              width={400}
+              height={300}
+              resolutionX={32}
+              resolutionY={32}
+              punch={1}
+              className='absolute inset-0 w-full h-full object-cover blur-md'
+            />
             <img
-              className='w-full h-full object-cover '
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                myLoading ? 'opacity-0' : 'opacity-100'
+              }`}
+              onLoad={() => setMyLoading(false)}
               src={currentImage.photo_image_url}
               alt='The Image goes here'
             />
           </Card>
         </div>
-        {/* <Card className='relative w-[80vw] max-w-[300px] h-[300px] bg-white rounded-2xl shadow-lg overflow-hidden align-self-center'>
-          <img
-            src={currentImage.photo_image_url}
-            alt='Card image'
-            className='w-full h-full object-cover '
-          />
-        </Card> */}
         {/* Image details */}
         <div className='pb-20'>
           <div className='flex gap-2 justify-between'>
@@ -242,40 +231,63 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
             </Button>{' '}
           </div>
           {/* Comment Section */}
-          <div className='grid w-full gap-2 mb-15'>
-            <div className='flex flex-col gap-4'>
-              {comments && user && comments.map((comment) => {
-                return (
-                  <>
-                    <Card
-                      key={comment._id}
-                      className='flex gap-2 shadow-md shadow-slate-300 h-24 rounded-lg items-center '
-                    >
-                      <Avatar className='ml-2'>
-                        <AvatarImage
-                          src={
-                            userImage ||
-                            'https://www.creativefabrica.com/wp-content/uploads/2022/09/15/Black-ink-drop-mark-Paint-stain-splatte-Graphics-38548553-1-1-580x387.png'
-                          }
-                          alt='user'
-                          className='w-10 h-10 rounded-full'
-                        />
-                        <AvatarFallback>??</AvatarFallback>
-                      </Avatar>
-                      <div className='flex justify-between w-11/12'>
-                        <div>
-                          <div className='flex gap-2'>
-                            <p className='font-semibold'>{user.username}:</p>
-                            <p className='text-start'>{comment.comment}</p>
-                          </div>
-                          <div>
-                            <p>{comment.createdAt}</p>
-                          </div>
-                        </div>
+          <div className='grid w-full gap-2 '>
+            <h3 className='text-2xl font-semibold'>Add your comment below</h3>
 
-                        {/* Actions Buttons */}
-                        <div className='flex  justify-center'>
-                          {/* <Dialog>
+            <Textarea
+              placeholder='Type your comment here.'
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              className='h-28'
+            />
+            <Button
+              className='w-fit justify-self-end my-3'
+              // disabled={!newComment.trim()}
+              onClick={handleNewComment}
+            >
+              Send comment
+              <SendHorizontal />
+            </Button>
+            <div className='flex flex-col gap-4'>
+              {comments &&
+                user &&
+                comments.map((comment) => {
+                  return (
+                    <div key={comment._id}>
+                      <Card className='flex gap-2 shadow-md shadow-slate-300 h-24 rounded-lg items-center pl-4'>
+                        <Avatar >
+                          <AvatarImage
+                            src={
+                              userImage ||
+                              'https://www.creativefabrica.com/wp-content/uploads/2022/09/15/Black-ink-drop-mark-Paint-stain-splatte-Graphics-38548553-1-1-580x387.png'
+                            }
+                            alt='user'
+                            className='w-10 h-10 rounded-full '
+                          />
+                          <AvatarFallback>??</AvatarFallback>
+                        </Avatar>
+                        <div className='flex justify-between w-11/12'>
+                          <div>
+                            <div className='flex gap-2'>
+                              <p className='font-semibold'>{user.username}:</p>
+                              <p className='text-start'>{comment.comment}</p>
+                            </div>
+                            <div className='text-start'>
+                              {formatDistanceToNow(
+                                new Date(comment.createdAt),
+                                { addSuffix: true }
+                              )}
+                              {/* {' (' +
+                                format(
+                                  new Date(comment.createdAt),
+                                  'MMMM do, yyyy h:mm a'
+                                ) +
+                                ')'} */}
+                            </div>
+                          </div>
+                          {/* Actions Buttons */}
+                          <div className='flex items-center'>
+                            {/* <Dialog>
                           <DialogTrigger>
                             <Button>
                               <Pencil />
@@ -301,37 +313,24 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
                             </DialogFooter>
                             </DialogContent>
                         </Dialog> */}
-                          {/* Delete Button */}
-                          <Button
-                            variant='destructive'
-                            onClick={() => handleDeleteComment(comment._id)}
-                            className='w-fit
-                            '
-                          >
-                            <CircleX />
-                          </Button>
+                            {/* Delete Button */}
+                            {user._id === comment.user_id ? (
+                              <Button
+                                variant='destructive'
+                                onClick={() => handleDeleteComment(comment._id)}
+                                className='w-fit justify-center'
+                              >
+                                {/* 675afdcf85211af984b3b54e */}
+                                <CircleX />
+                              </Button>
+                            ) : null}
+                          </div>
                         </div>
-                      </div>
-                    </Card>
-                  </>
-                );}
-              )}
+                      </Card>
+                    </div>
+                  );
+                })}
             </div>
-            <h4>Add your comment below</h4>
-
-            <Textarea
-              placeholder='Type your comment here.'
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-            />
-            <Button
-              className='w-fit justify-self-end'
-              disabled={!newComment.trim()}
-              onClick={handleNewComment}
-            >
-              Send comment
-              <SendHorizontal />
-            </Button>
           </div>
         </div>
       </div>
