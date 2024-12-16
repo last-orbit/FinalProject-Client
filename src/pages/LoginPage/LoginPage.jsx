@@ -43,7 +43,7 @@ const LoginPage = () => {
 
       <form
         className="flex flex-col gap-5 items-center"
-        // onSubmit={handleSubmit}
+        onSubmit={handleSubmit}
       >
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Input
@@ -59,13 +59,11 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <Button type="button" onClick={handleSubmit}>
-          Login
-        </Button>
+        <Button>Login</Button>
       </form>
-      <p className='mt-4'>
-        Don&#39;t have an account?{' '}
-        <a className='underline font-medium' href="/i'm-going-on-an-adventure">
+      <p className="mt-4">
+        Don&#39;t have an account?{" "}
+        <a className="underline font-medium" href="/i'm-going-on-an-adventure">
           Sign Up
         </a>
       </p>

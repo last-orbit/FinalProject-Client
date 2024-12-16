@@ -24,12 +24,7 @@ const MyCollection = () => {
   const [totalPages, setTotalPage] = useState(1);
   const nav = useNavigate();
 
-  //Page management
-  let previousPage = 0;
-  let currentPage = previousPage + 1;
-  let nextPage = previousPage + 2;
-
-  console.log(user);
+  // console.log(user);
   //Functions
   //Call to the server to get the user collection
   const getUserCollection = async (limit) => {
@@ -157,6 +152,14 @@ const MyCollection = () => {
                     <PaginationItem>
                       <PaginationEllipsis />
                     </PaginationItem>
+                    <PaginationItem>
+                      <PaginationLink
+                        href="#"
+                        onClick={() => handlePageChange(totalPages)}
+                      >
+                        {totalPages}
+                      </PaginationLink>
+                    </PaginationItem>
                   </>
                 )}
                 {/* Display pages > 3 to < totalPages - 2  */}
@@ -196,6 +199,14 @@ const MyCollection = () => {
                     </PaginationItem>
                     <PaginationItem>
                       <PaginationEllipsis />
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationLink
+                        href="#"
+                        onClick={() => handlePageChange(totalPages)}
+                      >
+                        {totalPages}
+                      </PaginationLink>
                     </PaginationItem>
                   </>
                 )}
