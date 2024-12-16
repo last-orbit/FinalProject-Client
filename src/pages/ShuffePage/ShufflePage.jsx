@@ -151,7 +151,7 @@ const ShufflePage = ({ addImageToCollection, deleteImageToCollection }) => {
         Curate Your World
       </h1>
 
-      <h3 className="text-center text-base w-3/5">
+      <h3 className="text-center text-base w-4/5 md:w-3/5">
         Discover Your Next Favorite Artwork! 🎨 Swipe right to add stunning
         creations to your collection or left to pass. Let your taste shape your
         unique gallery!"
@@ -160,8 +160,8 @@ const ShufflePage = ({ addImageToCollection, deleteImageToCollection }) => {
       {/* SwapContainer */}
       {/* Wait for loading image is finished */}
       {!myLoading && imageSample.length === 10 && (
-        <div className="flex flex-col">
-          <div className=" m-9 w-[90vw] max-w-[260px] h-[300px] flex flex-col items-center">
+        <div className="flex flex-col justify-center items-center min-h-[75vh] min-w-[75vw]">
+          <div className=" mb-10 w-[90vw] max-w-[260px] h-[300px] flex flex-col justify-center items-center">
             {imageSample &&
               imageSample.map((image, index) => {
                 return (
@@ -206,26 +206,30 @@ const ShufflePage = ({ addImageToCollection, deleteImageToCollection }) => {
               )}
             </div>
           </div>
-          <div className="flex justify-evenly items-center">
-            <Button
-              className="w-24"
-              onClick={() => swipe("left")}
-              disabled={!canSwipe}
-            >
-              Ouuuh
-            </Button>
-
-            <Button onClick={() => goBack()} disabled={!canGoBack}>
-              Undo
-            </Button>
-
-            <Button
-              className="w-24"
-              onClick={() => swipe("right")}
-              disabled={!canSwipe}
-            >
-              Love it!
-            </Button>
+          <div className="flex justify-between items-center w-[300px] mb-10">
+            <div>
+              <Button
+                className="w-24"
+                onClick={() => swipe("left")}
+                disabled={!canSwipe}
+              >
+                Ouuuh
+              </Button>
+            </div>
+            <div>
+              <Button onClick={() => goBack()} disabled={!canGoBack}>
+                Undo
+              </Button>
+            </div>
+            <div>
+              <Button
+                className="w-24"
+                onClick={() => swipe("right")}
+                disabled={!canSwipe}
+              >
+                Love it!
+              </Button>
+            </div>
           </div>
         </div>
       )}

@@ -4,7 +4,7 @@ import { API_URL } from "../../config";
 import axios from "axios";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import "./Footer.css";
-
+import { useTheme } from "@/components/ThemeProvider";
 //Component
 import { Button } from "@/components/ui/button";
 import {
@@ -17,12 +17,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChevronRight, Shuffle, Library, Newspaper } from "lucide-react";
+import { ThemeProvider } from "./ThemeProvider";
 
 const Footer = () => {
   //Setters
   const { user, isLoggedIn, handleLogout } = useContext(AuthContext);
   const [userImage, setUserImage] = useState(null);
   const location = useLocation();
+  const { theme, setTheme } = useTheme();
   const nav = useNavigate();
 
   const isProfilePage = location.pathname.startsWith("/the-shire");
@@ -50,7 +52,11 @@ const Footer = () => {
 
   return (
     <div>
-      <div className="w-full fixed h-12 bottom-0 flex justify-around items-center shadow-top md:hidden">
+      <div
+        className={`w-full fixed h-12 bottom-0 flex justify-around items-center shadow-top md:hidden 
+                  ${theme === "dark" ? "bg-black" : "bg-white"}
+                `}
+      >
         <Button
           variant={isShufflePage ? "default" : "outline"}
           size="icon"
@@ -89,7 +95,7 @@ const Footer = () => {
           </Avatar>
         </Link>
       </div>
-      <div className="hidden md:w-full md:h-12 md:fixed md:bottom-0 md:flex md:justify-around md:items-center shadow-top ">
+      <div className="hidden md:w-full md:h-12  md:bottom-0 md:flex md:justify-around md:items-center shadow-top ">
         Follow this project on github !
       </div>
     </div>
