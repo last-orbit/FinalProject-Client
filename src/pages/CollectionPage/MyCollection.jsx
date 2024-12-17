@@ -1,7 +1,7 @@
 import { AuthContext } from "@/contexts/AuthContext";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { API_URL } from '../../config/apiUrl.config';
+import { API_URL } from "../../config/apiUrl.config";
 
 import { Gallery } from "react-grid-gallery";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +30,7 @@ const MyCollection = () => {
   //Functions
   //Call to the server to get the user collection
   const getUserCollection = async (limit) => {
-    console.log("url", `${API_URL}/${user._id}?page=${page}&limit=${limit}`);
+    // console.log("url", `${API_URL}/${user._id}?page=${page}&limit=${limit}`);
     try {
       setIsLoading(true);
       const response = await axios.get(
@@ -57,7 +57,7 @@ const MyCollection = () => {
         }))
       );
       setIsLoading(false);
-      console.log("response", response.data);
+      // console.log("response", response.data);
     } catch (error) {
       console.log("did not manage to get the user's collection", error);
     }
