@@ -52,7 +52,11 @@ const Footer = () => {
 
   return (
     <div>
-      <div className="w-full fixed h-12 bottom-0 flex justify-around items-center shadow-top md:hidden ">
+      <div
+        className={`w-full fixed h-12 bottom-0 flex justify-around items-center shadow-top md:hidden ${
+          theme === "dark" ? "bg-black" : "bg-white"
+        } `}
+      >
         <Button
           variant={isShufflePage ? "default" : "outline"}
           size="icon"

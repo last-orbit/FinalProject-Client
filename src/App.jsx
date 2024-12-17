@@ -18,6 +18,7 @@ import axios from "axios";
 import { API_URL } from "../config";
 import { useContext } from "react";
 import { AuthContext } from "./contexts/AuthContext";
+import FriendProfilePage from "./pages/FriendProfilPage/FriendProfilePage";
 // import { Toaster } from "@/components/ui/toaster";
 
 function App() {
@@ -94,6 +95,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <MyCollection />
+              </ProtectedRoute>
+            }
+          />
+          {/* Use the token to access to the user ID */}
+          <Route
+            path="//a-boromir-to-trust/:friendId"
+            element={
+              <ProtectedRoute>
+                <FriendProfilePage />
               </ProtectedRoute>
             }
           />

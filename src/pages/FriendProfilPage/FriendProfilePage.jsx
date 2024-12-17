@@ -1,10 +1,12 @@
-import { AuthContext } from "@/contexts/AuthContext";
 import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
+import { AuthContext } from "@/contexts/AuthContext";
 import { API_URL } from "../../../config";
-import { Gallery } from "react-grid-gallery";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 import { decode } from "blurhash";
+import { Gallery } from "react-grid-gallery";
+
+//Components
 import {
   Pagination,
   PaginationContent,
@@ -14,29 +16,67 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const MyCollection = () => {
-  const { user } = useContext(AuthContext);
-  const [isLoading, setIsLoading] = useState(true);
-  const [userCollection, setUserCollection] = useState([]);
+//Media
+import { ChevronsUpDown, CirclePlus } from "lucide-react";
+
+const FriendProfilePage = () => {
+  //Setters
+  const { user, isLoggedIn } = useContext(AuthContext);
+  const { friendId } = useParams();
+  const nav = useNavigate();
+  const [friend, setFriend] = useState({});
+  const [friendsOfFriend, setFriendsOfFriend] = useState([]);
+  const [friendCollection, setFriendCollection] = useState([]);
+  const [isFriends, setIsFriends] = useState(false);
   const [hashCollection, setHashCollection] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPage] = useState(1);
-  const nav = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
-  // console.log(user);
   //Functions
-  //Call to the server to get the user collection
-  const getUserCollection = async (limit) => {
-    console.log("url", `${API_URL}/${user._id}?page=${page}&limit=${limit}`);
+  //Get friend image and name
+  const getFriendInfos = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/user/${friendId}`);
+      setFriend({
+        image: response.data.oneUser.image,
+        username: response.data.oneUser.username,
+      });
+    } catch (error) {
+      console.log("Did not find the friend infos", error);
+    }
+  };
+  //Get friend friends
+  const getFriendsOfFriend = async () => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/user/allfriends/${friendId}`
+      );
+      setFriendsOfFriend(response.data.friends.friends);
+    } catch (error) {
+      console.log(`did not find the friends of ${friend.username}`, error);
+    }
+  };
+  //   console.log(friendsOfFriend);
+
+  //Get the friend collection
+  const getFriendCollection = async (limit) => {
     try {
       setIsLoading(true);
       const response = await axios.get(
-        `${API_URL}/collection/${user._id}?page=${page}&limit=${limit}`
+        `${API_URL}/collection/${friendId}?page=${page}&limit=${limit}`
       );
       if (!response.data.images) {
-        return setUserCollection(null);
+        return setFriendCollection(null);
       }
       setTotalPage(response.data.totalPages);
       setHashCollection(
@@ -47,7 +87,7 @@ const MyCollection = () => {
           id: image.imageId._id,
         }))
       );
-      setUserCollection(
+      setFriendCollection(
         response.data.images.map((image) => ({
           src: `${image.imageId.photo_image_url}?q=30`,
           width: image.imageId.photo_width,
@@ -56,13 +96,13 @@ const MyCollection = () => {
         }))
       );
       setIsLoading(false);
-      console.log("response", response.data);
+      //   console.log("response", response.data);
     } catch (error) {
       console.log("did not manage to get the user's collection", error);
     }
   };
 
-  //decoding BlurHash to URL data
+  //Decoding BlurHash to URL data
   const decodeBlurHashImage = (blurHash, width = 32, height = 32) => {
     const pixels = decode(blurHash, width, height);
     const canvas = document.createElement("canvas");
@@ -75,9 +115,50 @@ const MyCollection = () => {
     return canvas.toDataURL();
   };
 
+  //Add Friend to friends
+  const addFriend = async () => {
+    try {
+      const response = await axios.put(
+        `${API_URL}/user/togetheritsbetter/${user._id}/${friendId}`
+      );
+      console.log("add as friend", response.data);
+      setIsFriends(!isFriends);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //Remove Friends to friends
+  const removeFriend = async () => {
+    try {
+      const response = await axios.delete(
+        `${API_URL}/user/togetheritsbetter/${user._id}/${friendId}`
+      );
+      console.log("friend removed from friends", response.data);
+      setIsFriends(!isFriends);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //Check if friend is on the user's friends array
+  const getIfFriends = async () => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/user/arefriends?userId=${user._id}&friendId=${friendId}`
+      );
+      setIsFriends(response.data.areFriends);
+    } catch (error) {
+      console.log("Din't not manage to know if are friends", error);
+    }
+  };
+
+  // Limit to 10 visible avatars
+  const visibleFriends = friendsOfFriend.slice(0, 10);
+  const hiddenFriends = friendsOfFriend.slice(10);
+
   //Redirect the user to the image page
   const handleImageClick = (index) => {
-    const imgId = userCollection[index].id;
+    const imgId = friendCollection[index].id;
     nav(`/for-frodo/${imgId}`);
   };
 
@@ -88,50 +169,120 @@ const MyCollection = () => {
     }
   };
 
-  // //Display the page index in the pagination depending on the current page desplayed
-  // const handlePageIndex = () => {
-  //   if (page === 1) {
-  //     previousPage = Number(page);
-  //   } else if (page === totalPages) {
-  //     previousPage = Number(totalPages) - 2;
-  //   } else {
-  //     previousPage = Number(page) - 1;
-  //   }
-  // };
-
+  //Hook
   useEffect(() => {
-    getUserCollection(10);
-  }, [page]);
+    getFriendInfos();
+    getFriendsOfFriend();
+    getFriendCollection(10);
+    getIfFriends();
+  }, [friendId, page, isFriends]);
 
-  if (!userCollection) {
-    return (
-      <div className="min-h-screen">
-        <h1 className="text-3xl p-7 font-semibold uppercase">My Collection</h1>
-        <div className="flex flex-col h-1/5 justify-center items-center">
-          <h2 className="text-2xl p-5">It's empty here 🥺...</h2>
-          <p>It seems that you have no image in your collection</p>
-          <Button className="m-8">Add images to my collection</Button>
+  return (
+    <div className="min-h-screen">
+      <div className="flex justify-center items-center mb-4">
+        <img
+          className="w-16 h-16 rounded-full border-2 object-cover border-gray-300"
+          src={friend.image}
+          alt={friend.username}
+        />
+
+        <div className="flex w-60 h-20 items-center justify-between ml-4">
+          <h2 className="text-3xl font-semibold uppercase">
+            {friend.username}
+          </h2>
+          <Button
+            variant={isFriends ? "outline" : "default"}
+            onClick={() => {
+              isFriends ? removeFriend() : addFriend();
+            }}
+          >
+            {isFriends ? "Following" : "Not Following Yet"}
+          </Button>
         </div>
       </div>
-    );
-  } else {
-    return (
+      {/* Friends List */}
       <div>
-        <div className="min-h-screen">
-          <h1 className="text-3xl p-7 font-semibold uppercase text-center">
-            My Collection
-          </h1>
+        <h2 className="text-2xl  font-semibold uppercase">Friends</h2>
+        <p className="text-l m-2">People that {friend.username} follows...</p>
+        <div className="flex justify-center items-center p-4 mb-4">
+          {!friendsOfFriend.length && <p>🥺 no friends for the moment...</p>}
+          {/* 10 first friends */}
+          <div className="flex justify-center items-center">
+            {friendsOfFriend.length > 0 &&
+              visibleFriends.map((friend) => (
+                <Link
+                  key={friend._id}
+                  to={
+                    friend._id === user._id
+                      ? "/the-shire"
+                      : `/a-boromir-to-trust/${friend._id}`
+                  }
+                >
+                  <Avatar className="m-1">
+                    <AvatarImage src={friend.image} alt={friend.username} />
+                    <AvatarFallback>
+                      {friend.username[0].toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </Link>
+              ))}
+          </div>
+          <div>
+            {/* rest of friends */}
+            {hiddenFriends.length > 0 && (
+              <Collapsible
+                open={isOpen}
+                onOpenChange={setIsOpen}
+                className="mt-4 space-y-2"
+              >
+                <CollapsibleTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex items-center"
+                  >
+                    <ChevronsUpDown className="h-4 w-4 mr-2" />
+                    {isOpen ? "Show less" : `Show ${hiddenFriends.length} more`}
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="flex flex-wrap gap-4 mt-2">
+                    {hiddenFriends.map((friend) => (
+                      <Avatar key={friend._id}>
+                        <AvatarImage src={friend.image} alt={friend.username} />
+                        <AvatarFallback>
+                          {friend.username[0].toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    ))}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Friend collection  */}
+      <div>
+        <h2 className="text-2xl  font-semibold uppercase m-4">Collection</h2>
+        <div>
           <div className="w-full">
             <div className="max-w-screen-md md:min-h-[75vh] mx-auto">
-              <Gallery
-                images={isLoading ? hashCollection : userCollection}
-                onClick={handleImageClick}
-                rowHeight={window.innerWidth >= 768 ? 250 : 180}
-              />
+              {!friendCollection && <p>🥺 no images for the moment...</p>}
+              {friendCollection && (
+                <Gallery
+                  images={isLoading ? hashCollection : friendCollection}
+                  onClick={handleImageClick}
+                  rowHeight={window.innerWidth >= 768 ? 250 : 180}
+                />
+              )}
             </div>
           </div>
-          {/* PAGINATION  */}
-          {/* PAGINATION */}
+        </div>
+
+        {/* PAGINATION */}
+        {friendCollection && (
           <div className="m-3 pb-14">
             {totalPages > 1 && (
               <Pagination>
@@ -284,10 +435,10 @@ const MyCollection = () => {
               </Pagination>
             )}
           </div>
-        </div>
+        )}
       </div>
-    );
-  }
+    </div>
+  );
 };
 
-export default MyCollection;
+export default FriendProfilePage;

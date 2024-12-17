@@ -93,7 +93,7 @@ const Navbar = () => {
           <Menubar>
             <Link to="/the-eagles-are-coming">
               <MenubarMenu>
-                <MenubarTrigger>Shuffle</MenubarTrigger>
+                <MenubarTrigger>Swipe</MenubarTrigger>
               </MenubarMenu>
             </Link>
             <Link to="/my-precious">

@@ -97,7 +97,7 @@ const ProfilePage = () => {
         }
       );
       console.log(response.data.message);
-      alert("Password updated successfully!");
+
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
