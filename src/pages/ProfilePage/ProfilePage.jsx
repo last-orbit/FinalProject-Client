@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
-import { API_URL } from "../../../config";
+import { API_URL } from "../../config/apiUrl.config";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -22,11 +22,20 @@ import { Gallery } from "react-grid-gallery";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 const ProfilePage = () => {
   //Setters
   const nav = useNavigate();
-  const { user, isLoggedIn } = useContext(AuthContext);
+  const { user, isLoggedIn, updateUser } = useContext(AuthContext);
   const [userInfos, setUserInfos] = useState({});
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -34,6 +43,8 @@ const ProfilePage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("***");
   const [friends, setFriends] = useState([]);
+  //For profile picture
+  const [image, setImage] = useState();
 
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -57,6 +68,7 @@ const ProfilePage = () => {
   //Upadte profile function
   const handleSubmit = async (e) => {
     e.preventDefault();
+    handleSingleImage(e);
     const userToUpdate = {
       username,
       email,
@@ -71,6 +83,7 @@ const ProfilePage = () => {
         ...userInfos,
         username: userToUpdate.username,
         email: userToUpdate.email,
+        image: image,
       });
       getUserInfos();
       setOpenEditProfile(false);
@@ -97,7 +110,7 @@ const ProfilePage = () => {
         }
       );
       console.log(response.data.message);
-
+      alert("Password updated successfully!");
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
@@ -138,6 +151,26 @@ const ProfilePage = () => {
       console.log(error);
     }
   };
+
+  // For Updating Profile Image
+  function handleSingleImage(e) {
+    // console.log(e.target.image.files[0]);
+    // const image = e.target.image.files[0];
+    console.log(`${API_URL}`);
+    const imageData = new FormData();
+    imageData.append("imageUrl", image);
+    axios
+      .put(`${API_URL}/user/upload/${user._id}`, imageData)
+      .then((res) => {
+        console.log("here is the response", res.data);
+        const updatedUser = res.data.updatedUser;
+        setUserInfos(updatedUser);
+        updateUser(updatedUser);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   //Hooks
   useEffect(() => {
@@ -205,11 +238,18 @@ const ProfilePage = () => {
                       onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
-                  <div>
+                  {/* Handle profile image */}
+                  <div className="flex items-center">
                     <Label className="mx-2 p-4">Profile Image</Label>
-                    <Button>
-                      <Pencil className="w-20 h-20" /> Change
-                    </Button>
+                    <Label className="p-3 w-35 h-10 flex justify-center items-center bg-black text-white cursor-pointer rounded-md">
+                      <Input
+                        type="file"
+                        style={{ display: "none" }}
+                        name="image"
+                        onChange={(e) => setImage(e.target.files[0])}
+                      />
+                      <Pencil className="mr-2 w-4" /> Change
+                    </Label>
                   </div>
                   <div className="my-2 flex justify-end">
                     <Button>Save changes</Button>

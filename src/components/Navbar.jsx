@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { API_URL } from "../../config";
+import { API_URL } from "../config/apiUrl.config";
 import axios from "axios";
 import { Link, NavLink } from "react-router-dom";
 import { useTheme } from "@/components/ThemeProvider";
@@ -41,7 +41,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 const Navbar = () => {
   //Setters
   const { user, isLoggedIn, handleLogout } = useContext(AuthContext);
-  const [userImage, setUserImage] = useState(null);
+  const userImage = user?.image;
   const { theme, setTheme } = useTheme();
 
   //this variable is true if the dark mode is activated
@@ -63,18 +63,18 @@ const Navbar = () => {
   //Hooks
   useEffect(() => {
     if (isLoggedIn && user) {
-      //to get the user image for the avatar
-      const getUserImage = async () => {
-        try {
-          const response = await axios.get(`${API_URL}/user/${user._id}`);
-          // console.log("Full response:", response.data.image);
-          setUserImage(response.data.oneUser.image);
-          // console.log(response.data.oneUser.image);
-        } catch (error) {
-          console.log("Didn't manage to get user image", error);
-        }
-      };
-      getUserImage();
+      // //to get the user image for the avatar
+      // const getUserImage = async () => {
+      //   try {
+      //     const response = await axios.get(`${API_URL}/user/${user._id}`);
+      //     // console.log("Full response:", response.data.image);
+      //     setUserImage(response.data.oneUser.image);
+      //     // console.log(response.data.oneUser.image);
+      //   } catch (error) {
+      //     console.log("Didn't manage to get user image", error);
+      //   }
+      // };
+      // getUserImage();
     }
   }, [isLoggedIn, userImage]);
 

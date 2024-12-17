@@ -4,7 +4,8 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { API_URL } from '../../../config';
+import { API_URL } from '../../config/apiUrl.config';
+
 
 
     const SignUp = () => {
