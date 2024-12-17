@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { API_URL } from "../../config";
+import { API_URL } from '../config/apiUrl.config';
 import axios from "axios";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import "./Footer.css";

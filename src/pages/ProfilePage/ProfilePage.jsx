@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "@/contexts/AuthContext";
-import { API_URL } from "../../../config";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '@/contexts/AuthContext';
+import { API_URL } from '../../config/apiUrl.config';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 //Components
-import { Button } from "@/components/ui/button";
-import { Pencil, LockKeyhole, Terminal } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { Pencil, LockKeyhole, Terminal } from 'lucide-react';
 import {
   Drawer,
   DrawerClose,
@@ -16,24 +16,35 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Gallery } from "react-grid-gallery";
+} from '@/components/ui/drawer';
+import { Gallery } from 'react-grid-gallery';
 
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from '@/components/ui/dialog';
 
 const ProfilePage = () => {
   //Setters
   const nav = useNavigate();
   const { user, isLoggedIn } = useContext(AuthContext);
   const [userInfos, setUserInfos] = useState({});
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("***");
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('***');
   const [friends, setFriends] = useState([]);
+  //For profile picture
+  const [image, setImage] = useState();
 
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -57,6 +68,7 @@ const ProfilePage = () => {
   //Upadte profile function
   const handleSubmit = async (e) => {
     e.preventDefault();
+    handleSingleImage(e);
     const userToUpdate = {
       username,
       email,
@@ -71,12 +83,13 @@ const ProfilePage = () => {
         ...userInfos,
         username: userToUpdate.username,
         email: userToUpdate.email,
+        image: image,
       });
       getUserInfos();
       setOpenEditProfile(false);
-      console.log("user updated");
+      console.log('user updated');
     } catch (error) {
-      console.log("failed to update user", error);
+      console.log('failed to update user', error);
     }
   };
   //Update password function
@@ -97,10 +110,10 @@ const ProfilePage = () => {
         }
       );
       console.log(response.data.message);
-
-      setOldPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
+      alert('Password updated successfully!');
+      setOldPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
     } catch (error) {
       console.log(error);
       console.log(error.response.data.message);
@@ -128,7 +141,7 @@ const ProfilePage = () => {
           height: 300,
           id: friend._id,
           customOverlay: (
-            <div className="w-full absolute bottom-0 bg-black/60 text-white  p-2">
+            <div className='w-full absolute bottom-0 bg-black/60 text-white  p-2'>
               <div>{friend.username}</div>
             </div>
           ),
@@ -139,6 +152,24 @@ const ProfilePage = () => {
     }
   };
 
+  // For Updating Profile Image
+  function handleSingleImage(e) {
+    // console.log(e.target.image.files[0]);
+    // const image = e.target.image.files[0];
+    console.log(`${API_URL}`);
+    const imageData = new FormData();
+    imageData.append('imageUrl', image);
+    axios
+      .put(`${API_URL}/user/upload/${user._id}`, imageData)
+      .then((res) => {
+        console.log('here is the response', res.data);
+        getUserInfos();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   //Hooks
   useEffect(() => {
     if (isLoggedIn && user) {
@@ -148,20 +179,20 @@ const ProfilePage = () => {
   }, [isLoggedIn, user]);
 
   return (
-    <div className="min-h-screen">
-      <h1 className="text-3xl p-7 font-semibold uppercase">My Profile</h1>
-      <div className="flex justify-center items-center">
+    <div className='min-h-screen'>
+      <h1 className='text-3xl p-7 font-semibold uppercase'>My Profile</h1>
+      <div className='flex justify-center items-center'>
         <img
-          className="w-40 h-40 rounded-full border-2 object-cover border-gray-300"
+          className='w-40 h-40 rounded-full border-2 object-cover border-gray-300'
           src={userInfos.image}
           alt={userInfos.username}
         />
 
-        <div className="flex flex-col h-40 items-start justify-around ml-4">
-          <h2 className="text-2xl font-semibold p-2font-semibold">
+        <div className='flex flex-col h-40 items-start justify-around ml-4'>
+          <h2 className='text-2xl font-semibold p-2font-semibold'>
             {userInfos.username}
           </h2>
-          <h2 className="text-xl">{userInfos.email}</h2>
+          <h2 className='text-xl'>{userInfos.email}</h2>
 
           {/* Mobile version */}
           {/* Edit profile */}
@@ -169,14 +200,14 @@ const ProfilePage = () => {
             <Drawer
               open={openEditProfile}
               onOpenChange={setOpenEditProfile}
-              className=""
+              className=''
             >
               <DrawerTrigger asChild>
-                <Button className="mr-2">
+                <Button className='mr-2'>
                   <Pencil /> Edit Profile
                 </Button>
               </DrawerTrigger>
-              <DrawerContent className="mx-2 p-4">
+              <DrawerContent className='mx-2 p-4'>
                 <DrawerHeader>
                   <DrawerTitle>Edit profile</DrawerTitle>
                   <DrawerDescription>
@@ -185,33 +216,40 @@ const ProfilePage = () => {
                   </DrawerDescription>
                 </DrawerHeader>
                 <form onSubmit={handleSubmit}>
-                  <div className="flex justify-center items-center my-4">
-                    <Label className="mx-2 p-4">Name</Label>
+                  <div className='flex justify-center items-center my-4'>
+                    <Label className='mx-2 p-4'>Name</Label>
                     <Input
-                      type="text"
-                      id="username"
-                      placeholder="Username"
+                      type='text'
+                      id='username'
+                      placeholder='Username'
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                     />
                   </div>
-                  <div className="flex justify-center items-center my-4">
-                    <Label className="mx-2 p-4">Email</Label>
+                  <div className='flex justify-center items-center my-4'>
+                    <Label className='mx-2 p-4'>Email</Label>
                     <Input
-                      type="email"
-                      id="email"
-                      placeholder="Email"
+                      type='email'
+                      id='email'
+                      placeholder='Email'
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
-                  <div>
-                    <Label className="mx-2 p-4">Profile Image</Label>
-                    <Button>
-                      <Pencil className="w-20 h-20" /> Change
-                    </Button>
+                  {/* Handle profile image */}
+                  <div className='flex items-center'>
+                    <Label className='mx-2 p-4'>Profile Image</Label>
+                    <Label className='p-3 w-35 h-10 flex justify-center items-center bg-black text-white cursor-pointer rounded-md'>
+                      <Input
+                        type='file'
+                        style={{ display: 'none' }}
+                        name='image'
+                        onChange={(e) => setImage(e.target.files[0])}
+                      />
+                      <Pencil className='mr-2 w-4' /> Change
+                    </Label>
                   </div>
-                  <div className="my-2 flex justify-end">
+                  <div className='my-2 flex justify-end'>
                     <Button>Save changes</Button>
                   </div>
                 </form>
@@ -224,11 +262,11 @@ const ProfilePage = () => {
               onOpenChange={setOpenUpdatePassword}
             >
               <DrawerTrigger asChild>
-                <Button variant="destructive">
+                <Button variant='destructive'>
                   <LockKeyhole /> Update Password
                 </Button>
               </DrawerTrigger>
-              <DrawerContent className="mx-2 p-4">
+              <DrawerContent className='mx-2 p-4'>
                 <DrawerHeader>
                   <DrawerTitle>Change password</DrawerTitle>
                   <DrawerDescription>
@@ -236,43 +274,43 @@ const ProfilePage = () => {
                   </DrawerDescription>
                 </DrawerHeader>
                 <form onSubmit={handleSubmitPassword}>
-                  <div className="flex justify-center items-center my-4">
-                    <Label className="mx-4 w-1/6">Old password</Label>
+                  <div className='flex justify-center items-center my-4'>
+                    <Label className='mx-4 w-1/6'>Old password</Label>
                     <Input
-                      type="password"
-                      id="oldPassword"
-                      placeholder="Old password"
+                      type='password'
+                      id='oldPassword'
+                      placeholder='Old password'
                       value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
                     />
                   </div>
-                  <div className="flex justify-center items-center my-4">
-                    <Label className="mx-4 w-1/6">New Password</Label>
+                  <div className='flex justify-center items-center my-4'>
+                    <Label className='mx-4 w-1/6'>New Password</Label>
                     <Input
-                      type="password"
-                      id="newPassword"
-                      placeholder="New Password"
+                      type='password'
+                      id='newPassword'
+                      placeholder='New Password'
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                     />
                   </div>
-                  <div className="flex justify-center items-center my-4">
-                    <Label className="mx-4 w-1/6">Confirmation</Label>
+                  <div className='flex justify-center items-center my-4'>
+                    <Label className='mx-4 w-1/6'>Confirmation</Label>
                     <Input
-                      type="password"
-                      id="confirmPassword"
-                      placeholder="Confirm your new Password"
+                      type='password'
+                      id='confirmPassword'
+                      placeholder='Confirm your new Password'
                       onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                   </div>
                   {errorMessage && (
-                    <Alert variant="destructive">
-                      <Terminal className="h-4 w-4" />
+                    <Alert variant='destructive'>
+                      <Terminal className='h-4 w-4' />
                       <AlertTitle>Oups!</AlertTitle>
                       <AlertDescription>{errorMessage}</AlertDescription>
                     </Alert>
                   )}
-                  <div className="my-2 flex justify-end">
+                  <div className='my-2 flex justify-end'>
                     <Button disabled={newPassword !== confirmPassword}>
                       Change Password
                     </Button>
@@ -284,8 +322,8 @@ const ProfilePage = () => {
         </div>
       </div>
       <div>
-        <h1 className="text-3xl p-7 font-semibold uppercase">My Friends</h1>
-        <div className="w-2/3 mx-auto">
+        <h1 className='text-3xl p-7 font-semibold uppercase'>My Friends</h1>
+        <div className='w-2/3 mx-auto'>
           <Gallery images={friends} onClick={handleImageClick} />
         </div>
       </div>

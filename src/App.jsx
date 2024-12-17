@@ -15,7 +15,7 @@ import Footer from "./components/Footer";
 import MyFeedPage from "./pages/MyFeed/MyFeedPage";
 import { ThemeProvider } from "./components/ThemeProvider";
 import axios from "axios";
-import { API_URL } from "../config";
+import { API_URL } from "./config/apiUrl.config";
 import { useContext } from "react";
 import { AuthContext } from "./contexts/AuthContext";
 import FriendProfilePage from "./pages/FriendProfilPage/FriendProfilePage";

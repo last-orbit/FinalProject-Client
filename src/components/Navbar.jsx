@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { API_URL } from "../../config";
+import { API_URL } from '../config/apiUrl.config';
 import axios from "axios";
 import { Link, NavLink } from "react-router-dom";
 import { useTheme } from "@/components/ThemeProvider";

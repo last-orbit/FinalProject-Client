@@ -1,5 +1,6 @@
 import axios from "axios";
-import { API_URL } from "../../../config";
+import { API_URL } from '../../config/apiUrl.config';
+
 import React from "react";
 import { useEffect, useState, useRef, useMemo, useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
