@@ -133,7 +133,7 @@ const ProfilePage = () => {
       const response = await axios.get(
         `${API_URL}/user/allFriends/${user._id}`
       );
-      console.log(response.data.friends.friends);
+      // console.log(response.data.friends.friends);
       setFriends(
         response.data.friends.friends.map((friend) => ({
           src: `${friend.image}?q=30`,
@@ -156,7 +156,7 @@ const ProfilePage = () => {
   function handleSingleImage(e) {
     // console.log(e.target.image.files[0]);
     // const image = e.target.image.files[0];
-    console.log(`${API_URL}`);
+    // console.log(`${API_URL}`);
     const imageData = new FormData();
     imageData.append("imageUrl", image);
     axios
