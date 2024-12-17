@@ -1,19 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { API_URL } from "../../../config";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 //Components
 import { Button } from "@/components/ui/button";
 import { Pencil, LockKeyhole, Terminal } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   Drawer,
   DrawerClose,
@@ -24,6 +17,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { Gallery } from "react-grid-gallery";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -31,6 +25,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const ProfilePage = () => {
   //Setters
+  const nav = useNavigate();
   const { user, isLoggedIn } = useContext(AuthContext);
   const [userInfos, setUserInfos] = useState({});
   const [username, setUsername] = useState("");
@@ -38,6 +33,7 @@ const ProfilePage = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("***");
+  const [friends, setFriends] = useState([]);
 
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -46,7 +42,7 @@ const ProfilePage = () => {
   const [openUpdatePassword, setOpenUpdatePassword] = useState(false);
 
   //Functions
-  //to get the user information
+  //To get the user information
   const getUserInfos = async () => {
     try {
       const response = await axios.get(`${API_URL}/user/${user._id}`);
@@ -58,7 +54,7 @@ const ProfilePage = () => {
       console.log("Didn't manage to get user infos", error);
     }
   };
-
+  //Upadte profile function
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userToUpdate = {
@@ -83,7 +79,7 @@ const ProfilePage = () => {
       console.log("failed to update user", error);
     }
   };
-
+  //Update password function
   const handleSubmitPassword = async (e) => {
     e.preventDefault();
     const passwordToUpdate = {
@@ -111,11 +107,43 @@ const ProfilePage = () => {
       setErrorMessage(error.response.data.message);
     }
   };
+  //Move to the friend profile
+  const handleImageClick = (index) => {
+    const friendId = friends[index].id;
+    nav(`/a-boromir-to-trust/${friendId}`);
+  };
+
+  //Get all friends
+  //TO BE UPDATED WITH PAGINATION
+  const getUserFriends = async () => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/user/allFriends/${user._id}`
+      );
+      console.log(response.data.friends.friends);
+      setFriends(
+        response.data.friends.friends.map((friend) => ({
+          src: `${friend.image}?q=30`,
+          width: 300,
+          height: 300,
+          id: friend._id,
+          customOverlay: (
+            <div className="w-full absolute bottom-0 bg-black/60 text-white  p-2">
+              <div>{friend.username}</div>
+            </div>
+          ),
+        }))
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   //Hooks
   useEffect(() => {
     if (isLoggedIn && user) {
       getUserInfos();
+      getUserFriends();
     }
   }, [isLoggedIn, user]);
 
@@ -176,6 +204,12 @@ const ProfilePage = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
+                  </div>
+                  <div>
+                    <Label className="mx-2 p-4">Profile Image</Label>
+                    <Button>
+                      <Pencil className="w-20 h-20" /> Change
+                    </Button>
                   </div>
                   <div className="my-2 flex justify-end">
                     <Button>Save changes</Button>
@@ -251,6 +285,9 @@ const ProfilePage = () => {
       </div>
       <div>
         <h1 className="text-3xl p-7 font-semibold uppercase">My Friends</h1>
+        <div className="w-2/3 mx-auto">
+          <Gallery images={friends} onClick={handleImageClick} />
+        </div>
       </div>
     </div>
   );
