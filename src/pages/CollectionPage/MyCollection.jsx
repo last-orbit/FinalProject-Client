@@ -14,6 +14,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Button } from "@/components/ui/button";
 
 const MyCollection = () => {
   const { user } = useContext(AuthContext);
@@ -34,6 +35,9 @@ const MyCollection = () => {
       const response = await axios.get(
         `${API_URL}/collection/${user._id}?page=${page}&limit=${limit}`
       );
+      if (!response.data.images) {
+        return setUserCollection(null);
+      }
       setTotalPage(response.data.totalPages);
       setHashCollection(
         response.data.images.map((image) => ({
@@ -101,9 +105,13 @@ const MyCollection = () => {
 
   if (!userCollection) {
     return (
-      <div>
+      <div className="min-h-screen">
         <h1 className="text-3xl p-7 font-semibold uppercase">My Collection</h1>
-        <p>add images to your collection</p>
+        <div className="flex flex-col h-1/5 justify-center items-center">
+          <h2 className="text-2xl p-5">It's empty here 🥺...</h2>
+          <p>It seems that you have no image in your collection</p>
+          <Button className="m-8">Add images to my collection</Button>
+        </div>
       </div>
     );
   } else {
