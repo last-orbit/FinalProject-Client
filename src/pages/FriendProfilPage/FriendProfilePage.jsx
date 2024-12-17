@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
-import { API_URL } from "../../../config";
+import { API_URL } from "../../config/apiUrl.config";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { decode } from "blurhash";
