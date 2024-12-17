@@ -47,6 +47,11 @@ const AuthContextWrapper = ({ children }) => {
     setUser(null);
     nav("/");
   }
+
+  function updateUser(updatedUser) {
+    setUser(updatedUser);
+  }
+
   useEffect(() => {
     authenticateUser();
   }, []);
@@ -59,6 +64,7 @@ const AuthContextWrapper = ({ children }) => {
         storeToken,
         handleLogout,
         isLoading,
+        updateUser,
       }}
     >
       {/* add isLoading to value if we ever use a loader */}
