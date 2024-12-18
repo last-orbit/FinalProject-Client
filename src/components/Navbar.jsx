@@ -63,8 +63,8 @@ const Navbar = () => {
   if (isLoading) {
     return <p>Loading</p>;
   }
-  console.log(user);
-  console.log(userImage);
+  // console.log(user);
+  // console.log(userImage);
   //Hooks
   // useEffect(() => {
   //   // if (isLoggedIn && user) {

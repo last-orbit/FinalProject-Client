@@ -124,7 +124,10 @@ function App() {
             path="/whats-up"
             element={
               <ProtectedRoute>
-                <MyFeedPage />
+                <MyFeedPage
+                  deleteImageToCollection={deleteImageToCollection}
+                  addImageToCollection={addImageToCollection}
+                />
               </ProtectedRoute>
             }
           />
