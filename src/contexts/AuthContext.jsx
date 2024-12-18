@@ -23,7 +23,7 @@ const AuthContextWrapper = ({ children }) => {
           // This will be changed later  from our .env
           headers: { authorization: `Bearer ${theToken}` },
         });
-        // console.log("successful authentication", data);
+        console.log("successful authentication", data);
         setIsLoading(false);
         setIsLoggedIn(true);
         setUser(data.currentUser);
@@ -55,6 +55,7 @@ const AuthContextWrapper = ({ children }) => {
   useEffect(() => {
     authenticateUser();
   }, []);
+
   return (
     <AuthContext.Provider
       value={{
