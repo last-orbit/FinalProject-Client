@@ -84,8 +84,8 @@ const Footer = () => {
             <AvatarImage
               className={
                 isProfilePage
-                  ? "rounded-full border-2  border-gray-500"
-                  : "rounded-full border-2  border-gray-100"
+                  ? "rounded-full border-2  border-gray-500 object-cover"
+                  : "rounded-full border-2  border-gray-100 object-cover"
               }
               src={
                 userImage ||
