@@ -130,7 +130,6 @@ const Navbar = () => {
                 <Link to="/the-shire">
                   <DropdownMenuItem>My Account</DropdownMenuItem>
                 </Link>
-
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
@@ -153,6 +152,9 @@ const Navbar = () => {
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>
                 </DropdownMenuSub>
+                <Link to="/fellowship">
+                  <DropdownMenuItem>About Us</DropdownMenuItem>
+                </Link>
 
                 <DropdownMenuSeparator />
 
@@ -175,7 +177,6 @@ const Navbar = () => {
                 <DropdownMenuItem>My Account</DropdownMenuItem>
               </Link>
 
-              <DropdownMenuSeparator />
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
@@ -198,6 +199,10 @@ const Navbar = () => {
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>
               </DropdownMenuSub>
+              <Link to="/fellowship">
+                <DropdownMenuItem>About Us</DropdownMenuItem>
+              </Link>
+              <DropdownMenuSeparator />
               <DropdownMenuLabel onClick={handleLogout}>
                 Logout
               </DropdownMenuLabel>
