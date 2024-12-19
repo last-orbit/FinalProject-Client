@@ -278,75 +278,10 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
               {isInCollection ? "Remove from Collection" : "Add to Collection"}
             </Button>{" "}
           </div>
+
           {/* Like Section */}
           {/* Visible Likes */}
-          <div className="flex justify-between">
-            <h3 className="text-2xl font-semibold">Liked By : </h3>
-            <div className="flex gap-2">
-              {imageHasLikes &&
-                visibleLikes.map((image) => {
-                  return (
-                    <Link
-                      key={image._id}
-                      to={
-                        image._id === user._id
-                          ? "/the-shire"
-                          : `/a-boromir-to-trust/${image._id}`
-                      }
-                    >
-                      <Avatar>
-                        <AvatarImage
-                          src={
-                            image.image ||
-                            "https://www.creativefabrica.com/wp-content/uploads/2022/09/15/Black-ink-drop-mark-Paint-stain-splatte-Graphics-38548553-1-1-580x387.png"
-                          }
-                          alt="user"
-                          className="w-10 h-10 rounded-full object-cover cursor-pointer"
-                          to={"/the-shire/" + image.user_id}
-                        />
-                        <AvatarFallback>??</AvatarFallback>
-                      </Avatar>
-                    </Link>
-                  );
-                })}
-            </div>
-          </div>
-          <div className="flex justify-end">
-            {/* rest of likes */}
-            {hiddenLikes.length > 0 && (
-              <Collapsible
-                open={isOpen}
-                onOpenChange={setIsOpen}
-                className="mt-4 space-y-2 justify-items-end"
-              >
-                <CollapsibleTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="flex items-center"
-                  >
-                    <ChevronsUpDown className="h-4 w-4 mr-2 flex" />
-                    {isOpen ? "Show less" : `Show ${hiddenLikes.length} more`}
-                  </Button>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <div className="flex flex-wrap gap-4 my-2">
-                    {hiddenLikes.map((friend) => (
-                      <Avatar key={friend._id}>
-                        <AvatarImage src={friend.image} alt={friend.username} />
-                        <AvatarFallback>
-                          {friend.username[0].toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                    ))}
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-            )}
-          </div>
-          {/* Like Section */}
-          {/* Visible Likes */}
-          <div className="flex justify-between">
+          <div className="flex justify-between mb-4">
             <h3 className="text-2xl font-semibold">Liked By : </h3>
             <div className="flex gap-2">
               {imageHasLikes &&
