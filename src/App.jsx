@@ -19,7 +19,7 @@ import { API_URL } from "./config/apiUrl.config";
 import { useContext } from "react";
 import { AuthContext } from "./contexts/AuthContext";
 import FriendProfilePage from "./pages/FriendProfilPage/FriendProfilePage";
-import Test from "./pages/HomePage/Test";
+
 // import { Toaster } from "@/components/ui/toaster";
 
 function App() {
@@ -65,7 +65,6 @@ function App() {
           <Route path="/i'm-going-on-an-adventure" element={<SignupPage />} />
           <Route path="/you-shall-not-pass" element={<LoginPage />} />
           <Route path="/" element={<HomePage />} />
-          <Route path="/test" element={<Test />} />
 
           {/* Use the imageId */}
           <Route
