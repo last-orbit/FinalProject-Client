@@ -164,9 +164,7 @@ const ProfilePage = () => {
     const imageData = new FormData();
     imageData.append('imageUrl', image);
     axios
-      .put(`${API_URL}/user/upload/${user._id}`, imageData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
+      .put(`${API_URL}/user/upload/${user._id}`, imageData)
       .then((res) => {
         console.log('here is the response', res.data);
         const updatedUser = res.data.updatedUser;
