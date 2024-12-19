@@ -32,13 +32,13 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   CirclePlus,
   CircleMinus,
   CircleX,
   SendHorizontal,
-  ChevronsUpDown,
   House,
 } from "lucide-react";
 
@@ -108,7 +108,6 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
       setIsLoadingComments(false);
     }
   };
-
   // Handles New Comment
   const handleNewComment = async () => {
     if (newComment) {
@@ -164,6 +163,8 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
     getImage();
     getLikes();
     // checkCollection();
+    /******************* Functions inside of UseEffect **************/
+
     //Checks if current image is in collection
     const checkIfInCollection = async () => {
       // const body = { data: { userId: user._id, imageId: imageId } };
@@ -277,11 +278,12 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
               {isInCollection ? "Remove from Collection" : "Add to Collection"}
             </Button>{" "}
           </div>
+
           {/* Like Section */}
           {/* Visible Likes */}
-          <div className="flex justify-between items-center mb-5">
+          <div className="flex justify-between mb-4">
             <h3 className="text-2xl font-semibold">Liked By : </h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex gap-2">
               {imageHasLikes &&
                 visibleLikes.map((image) => {
                   return (
@@ -343,8 +345,6 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
               </Collapsible>
             )}
           </div>
-          {/* Like Section */}
-
           {/* Comment Section */}
           <div className="grid w-full gap-2 ">
             <h3 className="text-2xl font-semibold">Add your comment below</h3>

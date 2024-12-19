@@ -38,11 +38,11 @@ const LoginPage = () => {
   }
 
   return (
-    <>
-      <h1 className="mb-10 text-2xl mt-20">Login Page </h1>
+    <div className="min-h-screen m-auto flex flex-col items-center justify-center overflow-hidden">
+      <h1 className="mb-10 text-2xl ">Login Page </h1>
 
       <form
-        className="flex flex-col gap-5 items-center"
+        className="flex  gap-5 items-center"
         onSubmit={handleSubmit}
       >
         <div className="grid w-full max-w-sm items-center gap-1.5">
@@ -67,7 +67,7 @@ const LoginPage = () => {
           Sign Up
         </a>
       </p>
-    </>
+    </div>
   );
 };
 

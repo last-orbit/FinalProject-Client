@@ -23,7 +23,7 @@ import { API_URL } from '../../config/apiUrl.config';
           password,
         };
         axios
-          .post(`${API_URL}/signup`, UserSignup)
+          .post(`${API_URL}/auth/signup`, UserSignup)
           .then((res) => {
             console.log(res.data);
             nav('/you-shall-not-pass');
@@ -31,12 +31,13 @@ import { API_URL } from '../../config/apiUrl.config';
       }
 
       return (
-        <div>
+        <div className='min-h-screen'>
+          <h1 className='mt-5 text-2xl'>Sign Up</h1>
           <form
-            className='flex flex-col gap-5 items-center mt-10'
+            className='flex flex-col gap-5 items-center mt-8'
             onSubmit={handleSignup}
           >
-            <div className='grid w-full max-w-sm items-center gap-1.5'>
+            {/* <div className='grid w-full max-w-sm items-center gap-1.5'>
               <Label>Image</Label>
               <Input
                 type='text'
@@ -45,7 +46,7 @@ import { API_URL } from '../../config/apiUrl.config';
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
               />
-            </div>
+            </div> */}
             <div className='grid w-full max-w-sm items-center gap-1.5'>
               <Label>Username</Label>
               <Input
