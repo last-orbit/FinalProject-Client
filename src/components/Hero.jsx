@@ -27,7 +27,7 @@ const Hero = () => {
 
       // Calling for 10 images
       const response = await axios.get(`${API_URL}/image/random`);
-      console.log("image sample =", response.data);
+      // console.log("image sample =", response.data);
       setImageSample(response.data);
       // update the loading state to display the cards
       setIsLoading(false);
@@ -40,7 +40,6 @@ const Hero = () => {
   useEffect(() => {
     getImageSample();
   }, []);
-  console.log(imageSample);
 
   if (isLoading || !imageSample.length) return <div>Loading...</div>;
   if (imageSample)

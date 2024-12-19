@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
-import { API_URL } from "@/config/apiUrl.config";
 
 import Hero from "@/components/Hero";
 //Components

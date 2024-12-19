@@ -79,22 +79,27 @@ const Footer = () => {
         >
           <Newspaper />
         </Button>
-        <Link to="the-shire">
-          <Avatar>
-            <AvatarImage
-              className={
-                isProfilePage
-                  ? "rounded-full border-2  border-gray-500 object-cover"
-                  : "rounded-full border-2  border-gray-100 object-cover"
-              }
-              src={
-                userImage ||
-                "https://www.creativefabrica.com/wp-content/uploads/2022/09/15/Black-ink-drop-mark-Paint-stain-splatte-Graphics-38548553-1-1-580x387.png"
-              }
-            />
-            <AvatarFallback>??</AvatarFallback>
-          </Avatar>
-        </Link>
+        {isLoggedIn && (
+          <Link to="the-shire">
+            <Avatar>
+              <AvatarImage
+                className={
+                  isProfilePage
+                    ? "rounded-full border-2  border-gray-500 object-cover"
+                    : "rounded-full border-2  border-gray-100 object-cover"
+                }
+                src={
+                  userImage ||
+                  "https://www.creativefabrica.com/wp-content/uploads/2022/09/15/Black-ink-drop-mark-Paint-stain-splatte-Graphics-38548553-1-1-580x387.png"
+                }
+              />
+              <AvatarFallback>??</AvatarFallback>
+            </Avatar>
+          </Link>
+        )}
+        {!isLoggedIn && (
+          <Button onClick={() => nav("/you-shall-not-pass")}>Login</Button>
+        )}
       </div>
 
       <div
