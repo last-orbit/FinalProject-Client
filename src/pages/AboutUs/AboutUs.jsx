@@ -101,10 +101,22 @@ const AboutUs = () => {
       <h3 className='text-xl mt-4'>Github Repos</h3>
       <div className='flex gap-4 w-11/12 justify-center mx-auto mt-4'>
         <p>
-          The Front End Repo <Link className='underline'>Here</Link>
+          The Front End Repo{' '}
+          <Link
+            className='underline'
+            to='https://github.com/last-orbit/FinalProject-Client'
+          >
+            Here
+          </Link>
         </p>
         <p>
-          The Back End Repo <Link className='underline'>Here</Link>
+          The Back End Repo{' '}
+          <Link
+            className='underline'
+            to='https://github.com/last-orbit/FinalProject-Server'
+          >
+            Here
+          </Link>
         </p>
       </div>
     </div>

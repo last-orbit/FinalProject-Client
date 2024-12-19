@@ -370,25 +370,25 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
                 comments.map((comment) => {
                   return (
                     <div key={comment._id}>
-                      <Card className="flex gap-2 shadow-md shadow-slate-300 h-24 rounded-lg items-center pl-4">
+                      <Card className='flex gap-2 shadow-md shadow-slate-300 h-24 rounded-lg items-center pl-4'>
                         <Avatar>
                           <AvatarImage
                             src={
                               userImage ||
-                              "https://www.creativefabrica.com/wp-content/uploads/2022/09/15/Black-ink-drop-mark-Paint-stain-splatte-Graphics-38548553-1-1-580x387.png"
+                              'https://www.creativefabrica.com/wp-content/uploads/2022/09/15/Black-ink-drop-mark-Paint-stain-splatte-Graphics-38548553-1-1-580x387.png'
                             }
-                            alt="user"
-                            className="w-10 h-10 rounded-full "
+                            alt='user'
+                            className='w-10 h-10 rounded-full object-cover'
                           />
                           <AvatarFallback>??</AvatarFallback>
                         </Avatar>
-                        <div className="flex justify-between w-11/12">
+                        <div className='flex justify-between w-11/12'>
                           <div>
-                            <div className="flex gap-2">
-                              <p className="font-semibold">{user.username}:</p>
-                              <p className="text-start">{comment.comment}</p>
+                            <div className='flex gap-2'>
+                              <p className='font-semibold'>{user.username}:</p>
+                              <p className='text-start'>{comment.comment}</p>
                             </div>
-                            <div className="text-start">
+                            <div className='text-start'>
                               {formatDistanceToNow(
                                 new Date(comment.createdAt),
                                 { addSuffix: true }
@@ -402,7 +402,7 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
                             </div>
                           </div>
                           {/* Actions Buttons */}
-                          <div className="flex items-center">
+                          <div className='flex items-center'>
                             {/* <Dialog>
                           <DialogTrigger>
                             <Button>
@@ -432,9 +432,9 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
                             {/* Delete Button */}
                             {user._id === comment.user_id ? (
                               <Button
-                                variant="destructive"
+                                variant='destructive'
                                 onClick={() => handleDeleteComment(comment._id)}
-                                className="w-fit justify-center"
+                                className='w-fit justify-center'
                               >
                                 {/* 675afdcf85211af984b3b54e */}
                                 <CircleX />
