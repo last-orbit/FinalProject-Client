@@ -7,15 +7,6 @@ import { API_URL } from "@/config/apiUrl.config";
 import Hero from "@/components/Hero";
 //Components
 
-//Components
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 const HomePage = () => {
   const nav = useNavigate();
   return (
