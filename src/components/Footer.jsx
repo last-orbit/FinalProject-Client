@@ -96,8 +96,13 @@ const Footer = () => {
           </Avatar>
         </Link>
       </div>
-      <div className="hidden md:w-full md:h-12  md:bottom-0 md:flex md:justify-around md:items-center shadow-top ">
-        Follow this project on github !
+
+      <div
+        className={`hidden md:fixed md:w-full md:h-8  md:bottom-0 md:flex md:justify-around md:items-center shadow-top ${
+          theme === "dark" ? "bg-black" : "bg-white"
+        } `}
+      >
+        Follow this project on Github !
       </div>
     </div>
   );
