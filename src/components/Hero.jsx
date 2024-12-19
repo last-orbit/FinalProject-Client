@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { API_URL } from "@/config/apiUrl.config";
 import { ParallaxProvider, Parallax } from "react-scroll-parallax";

@@ -11,7 +11,12 @@ const HomePage = () => {
     <>
       <div className="min-h-screen">
         <Hero />
-        <p>Discover Art, Swipe Pieces, Build your collection</p>
+        <p
+          className="p-2 mt-6
+        "
+        >
+          Discover Art, Swipe Pieces, Build your collection
+        </p>
         <Button
           className="m-4 w-52"
           onClick={() => nav("/the-eagles-are-coming")}
