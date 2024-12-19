@@ -34,7 +34,13 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CirclePlus, CircleMinus, CircleX, SendHorizontal } from "lucide-react";
+import {
+  CirclePlus,
+  CircleMinus,
+  CircleX,
+  SendHorizontal,
+  House,
+} from "lucide-react";
 
 const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
   const { user } = useContext(AuthContext);
