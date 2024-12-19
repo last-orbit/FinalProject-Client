@@ -117,7 +117,7 @@ const Navbar = () => {
               <DropdownMenuTrigger>
                 <Avatar>
                   <AvatarImage
-                    className="rounded-full border-2  border-gray-100"
+                    className="rounded-full border-2  border-gray-100 object-cover"
                     src={
                       userImage ||
                       "https://www.creativefabrica.com/wp-content/uploads/2022/09/15/Black-ink-drop-mark-Paint-stain-splatte-Graphics-38548553-1-1-580x387.png"

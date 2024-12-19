@@ -50,8 +50,26 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
   const [isInCollection, setIsInCollection] = useState(false);
   //gets user image for avatar
   const [userImage, setUserImage] = useState(null);
+  //checks if collection has likes
+  const [imageHasLikes, setImageHasLikes] = useState([]);
+
+  const [isOpen, setIsOpen] = useState(false);
 
   /******************* Functions **************/
+  const getLikes = async () => {
+    try {
+      const { data } = await axios.get(
+        `${API_URL}/collection/likes/${imageId}`
+      );
+      setImageHasLikes(data);
+      console.log(data);
+    } catch (error) {
+      console.log("did not find other users", error);
+    }
+  };
+
+  const visibleLikes = imageHasLikes.slice(0, 5);
+  const hiddenLikes = imageHasLikes.slice(5);
 
   //gets the image by id
   const getImage = async () => {
@@ -117,7 +135,7 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
     }
   };
 
-  // // Handles updating comments
+  // // Handles updating comments if we wanted to add it
   // const handleUpdateComment = async (commentId) => {
   //   try {
   //     const updatedComment = await axios.put(`${API_URL}/comment/update/${commentId}`, {
@@ -129,8 +147,10 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
   //   }
   // }
 
+  // Hook
   useEffect(() => {
     getImage();
+    getLikes();
     // checkCollection();
     //Checks if current image is in collection
     const checkIfInCollection = async () => {
@@ -159,10 +179,10 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
     };
     getUserImage();
     checkIfInCollection(); //this will see if image is in collection or not
-    handleNewComment();
+    // handleNewComment();
     getComments(); //Fetches Comments if any
   }, [user, imageId]);
-  /******************* If there are no images, show a loading screen **************/
+  /******************* Loader screen **************/
   // console.log(comments[0].comment);
   if (!currentImage) {
     return (
@@ -179,6 +199,17 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
 
   return (
     <>
+      {/* Back Home Button */}
+      <div className="flex justify-end w-11/12">
+        <Link
+          className="w-fit mt-5 mb-2 bg-black text-white py-2 px-3 rounded-lg hover:bg-gray-800 transition duration-300 ease-in-out flex items-center gap-2"
+          to="/"
+        >
+          <House />
+          Home
+        </Link>
+      </div>
+
       {/* Image */}
       <div className="mt-10  gap-2 m-0 w-7/12 justify-self-center  h-auto">
         <div className="mb-5 justify-self-center">
@@ -229,6 +260,138 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
               {isInCollection ? <CircleMinus /> : <CirclePlus />}{" "}
               {isInCollection ? "Remove from Collection" : "Add to Collection"}
             </Button>{" "}
+          </div>
+          {/* Like Section */}
+          {/* Visible Likes */}
+          <div className="flex justify-between">
+            <h3 className="text-2xl font-semibold">Liked By : </h3>
+            <div className="flex gap-2">
+              {imageHasLikes &&
+                visibleLikes.map((image) => {
+                  return (
+                    <Link
+                      key={image._id}
+                      to={
+                        image._id === user._id
+                          ? "/the-shire"
+                          : `/a-boromir-to-trust/${image._id}`
+                      }
+                    >
+                      <Avatar>
+                        <AvatarImage
+                          src={
+                            image.image ||
+                            "https://www.creativefabrica.com/wp-content/uploads/2022/09/15/Black-ink-drop-mark-Paint-stain-splatte-Graphics-38548553-1-1-580x387.png"
+                          }
+                          alt="user"
+                          className="w-10 h-10 rounded-full object-cover cursor-pointer"
+                          to={"/the-shire/" + image.user_id}
+                        />
+                        <AvatarFallback>??</AvatarFallback>
+                      </Avatar>
+                    </Link>
+                  );
+                })}
+            </div>
+          </div>
+          <div className="flex justify-end">
+            {/* rest of likes */}
+            {hiddenLikes.length > 0 && (
+              <Collapsible
+                open={isOpen}
+                onOpenChange={setIsOpen}
+                className="mt-4 space-y-2 justify-items-end"
+              >
+                <CollapsibleTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex items-center"
+                  >
+                    <ChevronsUpDown className="h-4 w-4 mr-2 flex" />
+                    {isOpen ? "Show less" : `Show ${hiddenLikes.length} more`}
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="flex flex-wrap gap-4 my-2">
+                    {hiddenLikes.map((friend) => (
+                      <Avatar key={friend._id}>
+                        <AvatarImage src={friend.image} alt={friend.username} />
+                        <AvatarFallback>
+                          {friend.username[0].toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    ))}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            )}
+          </div>
+          {/* Like Section */}
+          {/* Visible Likes */}
+          <div className="flex justify-between">
+            <h3 className="text-2xl font-semibold">Liked By : </h3>
+            <div className="flex gap-2">
+              {imageHasLikes &&
+                visibleLikes.map((image) => {
+                  return (
+                    <Link
+                      key={image._id}
+                      to={
+                        image._id === user._id
+                          ? "/the-shire"
+                          : `/a-boromir-to-trust/${image._id}`
+                      }
+                    >
+                      <Avatar>
+                        <AvatarImage
+                          src={
+                            image.image ||
+                            "https://www.creativefabrica.com/wp-content/uploads/2022/09/15/Black-ink-drop-mark-Paint-stain-splatte-Graphics-38548553-1-1-580x387.png"
+                          }
+                          alt="user"
+                          className="w-10 h-10 rounded-full object-cover cursor-pointer"
+                          to={"/the-shire/" + image.user_id}
+                        />
+                        <AvatarFallback>??</AvatarFallback>
+                      </Avatar>
+                    </Link>
+                  );
+                })}
+            </div>
+          </div>
+          <div className="flex justify-end">
+            {/* rest of likes */}
+            {hiddenLikes.length > 0 && (
+              <Collapsible
+                open={isOpen}
+                onOpenChange={setIsOpen}
+                className="mt-4 space-y-2 justify-items-end"
+              >
+                <CollapsibleTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex items-center"
+                  >
+                    <ChevronsUpDown className="h-4 w-4 mr-2 flex" />
+                    {isOpen ? "Show less" : `Show ${hiddenLikes.length} more`}
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="flex flex-wrap gap-4 my-2">
+                    {hiddenLikes.map((friend) => (
+                      <Avatar key={friend._id}>
+                        <AvatarImage src={friend.image} alt={friend.username} />
+                        <AvatarFallback>
+                          {friend.username[0].toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    ))}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            )}
           </div>
           {/* Comment Section */}
           <div className="grid w-full gap-2 ">
