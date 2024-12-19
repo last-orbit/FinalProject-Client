@@ -3,18 +3,14 @@ import {
   Card,
   CardContent,
   CardDescription,
-
   CardTitle,
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import fabImage from '../../assets/Fab-Image.png'
-import robImage from '../../assets/2ndProfile.jpg'
+import fabImage from '../../assets/Fab-Image.png';
+import robImage from '../../assets/2ndProfile.jpg';
 import { Link, NavLink } from 'react-router-dom';
-// Icons are deprecated so they may have to be change later or write a ternanry instead
-import { Linkedin, Github } from 'lucide-react';
-
-
-
+// Linkedin & Github are deprecated so they may have to be change later or write a ternanry instead
+import { Linkedin, Github, Mail } from 'lucide-react';
 
 const AboutUs = () => {
   return (
@@ -39,16 +35,23 @@ const AboutUs = () => {
             <h4>Here are my links below : </h4>
             <div className='flex gap-4 justify-center mt-3'>
               <Link
-                className='underline'
                 to='https://www.linkedin.com/in/fabien-dubin-46ab121b/'
+                title='Fabs LinkedIn'
               >
                 {' '}
                 <Linkedin />
               </Link>
-              <Link className='underline' to='https://github.com/FabienDubin'>
+              <Link to='https://github.com/FabienDubin' title='Fabs Github'>
                 {' '}
                 <Github />
               </Link>
+              <a
+                href='mailto: fabien.dubin@gmail.com'
+                title='fabien.dubin@gmail.com'
+              >
+                {' '}
+                <Mail />
+              </a>
             </div>
           </CardContent>
         </Card>
@@ -71,14 +74,26 @@ const AboutUs = () => {
               <Link
                 className='underline'
                 to='https://www.linkedin.com/in/dev-ro/'
+                title='Robs Linkedin'
               >
                 {' '}
                 <Linkedin />
               </Link>
-              <Link className='underline' to='https://github.com/last-orbit'>
+              <Link
+                className='underline'
+                to='https://github.com/last-orbit'
+                title='Robs Github'
+              >
                 {' '}
                 <Github />
               </Link>
+              <a
+                href='mailto: lastorbit1@gmail.com'
+                title='lastorbit1@gmail.com'
+              >
+                {' '}
+                <Mail />
+              </a>
             </div>
           </CardContent>
         </Card>
