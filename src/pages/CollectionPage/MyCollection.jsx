@@ -118,19 +118,28 @@ const MyCollection = () => {
   } else {
     return (
       <div>
+<<<<<<< HEAD
         <div className="min-h-svh ">
+=======
+        <div className="min-h-svh relative">
+>>>>>>> 453e694 (end of day)
           <h1 className="text-3xl p-7 font-semibold uppercase text-center">
             My Collection
           </h1>
 
           <div className="w-full h-full">
+<<<<<<< HEAD
             <div className="max-w-screen-md md:min-h-[75vh] mx-auto">
+=======
+            <div className="max-w-screen-md md:min-h-[75vh] mx-auto my-auto">
+>>>>>>> 453e694 (end of day)
               <Gallery
                 images={isLoading ? hashCollection : userCollection}
                 onClick={handleImageClick}
 
                 // rowHeight={}
               />
+<<<<<<< HEAD
               {/* PAGINATION  */}
               {/* PAGINATION */}
               <div className="w-full">
@@ -289,6 +298,164 @@ const MyCollection = () => {
                   )}
                 </div>
               </div>
+=======
+            </div>
+          </div>
+          {/* PAGINATION  */}
+          {/* PAGINATION */}
+          <div className="absolute w-full bottom-14">
+            <div className="flex justify-center items-center pb-14 ">
+              {totalPages > 1 && (
+                <Pagination>
+                  <PaginationContent>
+                    {/* Previous button */}
+                    <PaginationItem>
+                      <PaginationPrevious
+                        href="#"
+                        onClick={() => handlePageChange(page - 1)}
+                        disabled={page === 1}
+                      />
+                    </PaginationItem>
+
+                    {/* Case: totalPages <= 4 */}
+                    {totalPages <= 4 && (
+                      <>
+                        {[...Array(totalPages)].map((_, index) => {
+                          const pageNumber = index + 1;
+                          return (
+                            <PaginationItem key={pageNumber}>
+                              <PaginationLink
+                                href="#"
+                                onClick={() => handlePageChange(pageNumber)}
+                                isActive={page === pageNumber}
+                              >
+                                {pageNumber}
+                              </PaginationLink>
+                            </PaginationItem>
+                          );
+                        })}
+                      </>
+                    )}
+
+                    {/* Case: totalPages > 4 and page <= 3 */}
+                    {totalPages > 4 && page <= 3 && (
+                      <>
+                        {[1, 2, 3].map((pageNumber) => (
+                          <PaginationItem key={pageNumber}>
+                            <PaginationLink
+                              href="#"
+                              onClick={() => handlePageChange(pageNumber)}
+                              isActive={page === pageNumber}
+                            >
+                              {pageNumber}
+                            </PaginationLink>
+                          </PaginationItem>
+                        ))}
+                        <PaginationItem>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationLink
+                            href="#"
+                            onClick={() => handlePageChange(totalPages)}
+                          >
+                            {totalPages}
+                          </PaginationLink>
+                        </PaginationItem>
+                      </>
+                    )}
+
+                    {/* Case: totalPages > 4 and page in the middle */}
+                    {totalPages > 4 && page > 3 && page < totalPages - 2 && (
+                      <>
+                        <PaginationItem>
+                          <PaginationLink
+                            href="#"
+                            onClick={() => handlePageChange(1)}
+                          >
+                            1
+                          </PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationLink
+                            href="#"
+                            onClick={() => handlePageChange(page - 1)}
+                          >
+                            {page - 1}
+                          </PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationLink href="#" isActive>
+                            {page}
+                          </PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationLink
+                            href="#"
+                            onClick={() => handlePageChange(page + 1)}
+                          >
+                            {page + 1}
+                          </PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationLink
+                            href="#"
+                            onClick={() => handlePageChange(totalPages)}
+                          >
+                            {totalPages}
+                          </PaginationLink>
+                        </PaginationItem>
+                      </>
+                    )}
+
+                    {/* Case: totalPages > 4 and page near the end */}
+                    {totalPages > 4 && page >= totalPages - 2 && (
+                      <>
+                        <PaginationItem>
+                          <PaginationLink
+                            href="#"
+                            onClick={() => handlePageChange(1)}
+                          >
+                            1
+                          </PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                        {[totalPages - 2, totalPages - 1, totalPages].map(
+                          (pageNumber) => (
+                            <PaginationItem key={pageNumber}>
+                              <PaginationLink
+                                href="#"
+                                onClick={() => handlePageChange(pageNumber)}
+                                isActive={page === pageNumber}
+                              >
+                                {pageNumber}
+                              </PaginationLink>
+                            </PaginationItem>
+                          )
+                        )}
+                      </>
+                    )}
+
+                    {/* Next button */}
+                    <PaginationItem>
+                      <PaginationNext
+                        href="#"
+                        onClick={() => handlePageChange(page + 1)}
+                        disabled={page === totalPages}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              )}
+>>>>>>> 453e694 (end of day)
             </div>
           </div>
         </div>
