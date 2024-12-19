@@ -40,7 +40,8 @@ import {
   CircleX,
   SendHorizontal,
   House,
-} from "lucide-react";
+  ChevronsUpDown,
+} from 'lucide-react';
 
 const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
   const { user } = useContext(AuthContext);

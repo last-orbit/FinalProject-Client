@@ -17,7 +17,7 @@ const MyFeedPage = ({ addImageToCollection, deleteImageToCollection }) => {
     try {
       setIsLoading(true);
       const response = await axios.get(
-        `${API_URL}/collection//getalluserimages/${user._id}?page=${page}&limit=${limit}`
+        `${API_URL}/collection/getalluserimages/${user._id}?page=${page}&limit=${limit}`
       );
       if (!response.data.images) {
         return setMyFeed(null);
