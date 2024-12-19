@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+
 import axios from "axios";
 import { API_URL } from "../../config/apiUrl.config";
 import { useContext } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import { Blurhash } from "react-blurhash";
 import { format, formatDistanceToNow } from "date-fns";
@@ -18,6 +19,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -26,9 +32,15 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CirclePlus, CircleMinus, CircleX, SendHorizontal } from "lucide-react";
+import {
+  CirclePlus,
+  CircleMinus,
+  CircleX,
+  SendHorizontal,
+  ChevronsUpDown,
+  House,
+} from "lucide-react";
 
 const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
   const { user } = useContext(AuthContext);
@@ -62,7 +74,7 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
         `${API_URL}/collection/likes/${imageId}`
       );
       setImageHasLikes(data);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.log("did not find other users", error);
     }
@@ -177,14 +189,18 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
         console.log("Didn't manage to get user image", error);
       }
     };
-    getUserImage();
-    checkIfInCollection(); //this will see if image is in collection or not
+    //wait for the user to be defined
+    if (user) {
+      getUserImage();
+      checkIfInCollection(); //this will see if image is in collection or not
+    }
+
     // handleNewComment();
     getComments(); //Fetches Comments if any
   }, [user, imageId]);
   /******************* Loader screen **************/
   // console.log(comments[0].comment);
-  if (!currentImage) {
+  if (!currentImage || !user) {
     return (
       <div className="flex flex-col space-y-3 justify-self-center align-self-center mt-10">
         <Skeleton className="h-[250px] w-[300px] rounded-xl" />
@@ -263,9 +279,9 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
           </div>
           {/* Like Section */}
           {/* Visible Likes */}
-          <div className="flex justify-between">
+          <div className="flex justify-between items-center mb-5">
             <h3 className="text-2xl font-semibold">Liked By : </h3>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {imageHasLikes &&
                 visibleLikes.map((image) => {
                   return (
@@ -328,71 +344,7 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
             )}
           </div>
           {/* Like Section */}
-          {/* Visible Likes */}
-          <div className="flex justify-between">
-            <h3 className="text-2xl font-semibold">Liked By : </h3>
-            <div className="flex gap-2">
-              {imageHasLikes &&
-                visibleLikes.map((image) => {
-                  return (
-                    <Link
-                      key={image._id}
-                      to={
-                        image._id === user._id
-                          ? "/the-shire"
-                          : `/a-boromir-to-trust/${image._id}`
-                      }
-                    >
-                      <Avatar>
-                        <AvatarImage
-                          src={
-                            image.image ||
-                            "https://www.creativefabrica.com/wp-content/uploads/2022/09/15/Black-ink-drop-mark-Paint-stain-splatte-Graphics-38548553-1-1-580x387.png"
-                          }
-                          alt="user"
-                          className="w-10 h-10 rounded-full object-cover cursor-pointer"
-                          to={"/the-shire/" + image.user_id}
-                        />
-                        <AvatarFallback>??</AvatarFallback>
-                      </Avatar>
-                    </Link>
-                  );
-                })}
-            </div>
-          </div>
-          <div className="flex justify-end">
-            {/* rest of likes */}
-            {hiddenLikes.length > 0 && (
-              <Collapsible
-                open={isOpen}
-                onOpenChange={setIsOpen}
-                className="mt-4 space-y-2 justify-items-end"
-              >
-                <CollapsibleTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="flex items-center"
-                  >
-                    <ChevronsUpDown className="h-4 w-4 mr-2 flex" />
-                    {isOpen ? "Show less" : `Show ${hiddenLikes.length} more`}
-                  </Button>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <div className="flex flex-wrap gap-4 my-2">
-                    {hiddenLikes.map((friend) => (
-                      <Avatar key={friend._id}>
-                        <AvatarImage src={friend.image} alt={friend.username} />
-                        <AvatarFallback>
-                          {friend.username[0].toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                    ))}
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-            )}
-          </div>
+
           {/* Comment Section */}
           <div className="grid w-full gap-2 ">
             <h3 className="text-2xl font-semibold">Add your comment below</h3>
