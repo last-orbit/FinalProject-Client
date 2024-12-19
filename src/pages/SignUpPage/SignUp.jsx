@@ -23,7 +23,7 @@ import { API_URL } from '../../config/apiUrl.config';
           password,
         };
         axios
-          .post(`${API_URL}/signup`, UserSignup)
+          .post(`${API_URL}/auth/signup`, UserSignup)
           .then((res) => {
             console.log(res.data);
             nav('/you-shall-not-pass');
