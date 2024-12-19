@@ -101,7 +101,7 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
     try {
       const { data } = await axios.get(`${API_URL}/comment/${imageId}`);
       setComments(data.comments);
-      // console.log(data.comments);
+      console.log(data.comments);
     } catch (error) {
       console.log('Error fetching comments ', error);
     } finally {
@@ -449,6 +449,12 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
             </div>
           </div>
         </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
       </div>
     </>
   );
