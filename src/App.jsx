@@ -19,11 +19,6 @@ import { API_URL } from "./config/apiUrl.config";
 import { useContext } from "react";
 import { AuthContext } from "./contexts/AuthContext";
 import FriendProfilePage from "./pages/FriendProfilPage/FriendProfilePage";
-<<<<<<< HEAD
-
-=======
-import Test from "./pages/HomePage/Test";
->>>>>>> 3774bb6 (Homepage done)
 // import { Toaster } from "@/components/ui/toaster";
 
 function App() {
