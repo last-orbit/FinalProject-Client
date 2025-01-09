@@ -70,12 +70,12 @@ function App() {
           <Route
             path="/for-frodo/:imageId"
             element={
-              // <ProtectedRoute>
+              <ProtectedRoute>
               <ImagePage
                 deleteImageToCollection={deleteImageToCollection}
                 addImageToCollection={addImageToCollection}
               />
-              // </ProtectedRoute>
+                </ProtectedRoute>
             }
           />
 

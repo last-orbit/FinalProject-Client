@@ -12,27 +12,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   CirclePlus,
@@ -51,8 +36,6 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
   const [currentImage, setCurrentImage] = useState(null);
   // grabs the comments
   const [comments, setComments] = useState([]);
-  // Edits the comment
-  const [editComment, setEditComment] = useState("");
   // For New Comments
   const [newComment, setNewComment] = useState("");
   // For Loading Comments
@@ -146,19 +129,6 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
       console.log("error with deleting the comment", error);
     }
   };
-
-  // // Handles updating comments if we wanted to add it
-  // const handleUpdateComment = async (commentId) => {
-  //   try {
-  //     const updatedComment = await axios.put(`${API_URL}/comment/update/${commentId}`, {
-  //       comment: editcomment
-  //     });
-  //     setComments(comments.map((comment) => comment._id === commentId ? updatedComment.data : comment));
-  //   } catch (error) {
-  //     console.log('error with updating the comment', error);
-  //   }
-  // }
-
   // Hook
   useEffect(() => {
     getImage();
@@ -400,46 +370,6 @@ const ImagePage = ({ deleteImageToCollection, addImageToCollection }) => {
                                 ) +
                                 ')'} */}
                             </div>
-                          </div>
-                          {/* Actions Buttons */}
-                          <div className='flex items-center'>
-                            {/* <Dialog>
-                          <DialogTrigger>
-                            <Button>
-                              <Pencil />
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle>Edit Comment</DialogTitle>
-                              <DialogDescription>
-                                <Textarea
-                                  placeholder='Edit your comment.'
-                                  value={editComment.comment}
-                                  onChange={(e) => setEditComment(e.target.value)}
-                                />
-                              </DialogDescription>
-                            </DialogHeader>
-                            <DialogFooter>
-                              <Button
-                                onClick={() => handleUpdateComment(comment._id)}
-                              >
-                                Save
-                              </Button>
-                            </DialogFooter>
-                            </DialogContent>
-                        </Dialog> */}
-                            {/* Delete Button */}
-                            {user._id === comment.user_id ? (
-                              <Button
-                                variant='destructive'
-                                onClick={() => handleDeleteComment(comment._id)}
-                                className='w-fit justify-center'
-                              >
-                                {/* 675afdcf85211af984b3b54e */}
-                                <CircleX />
-                              </Button>
-                            ) : null}
                           </div>
                         </div>
                       </Card>

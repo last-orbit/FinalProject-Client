@@ -9,10 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Pencil, LockKeyhole, Terminal } from 'lucide-react';
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -22,15 +20,6 @@ import { Gallery } from 'react-grid-gallery';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from '@/components/ui/dialog';
 
 const ProfilePage = () => {
   //Setters
@@ -154,9 +143,6 @@ const ProfilePage = () => {
 
   // For Updating Profile Image
   function handleSingleImage(e) {
-    // console.log(e.target.image.files[0]);
-    // const image = e.target.image.files[0];
-    // console.log(`${API_URL}`);
     if (!image) {
       console.log('No file Selected for upload');
       return;
